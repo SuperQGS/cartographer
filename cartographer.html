@@ -3,13 +3,24 @@
     <head>
         <meta charset="utf-8"/>
         <style>
-            * {
-                text-align: center;
+            #hotbar {
+                width: 100%;
+                border-bottom: 1px solid black;
+            }
+            #workspace {
+                border-right: 1px solid black;
+                width: 75%;
+                height: 93vh;
+                float: left;
+                overflow: scroll;
+            }
+            #sidelist {
+                height: 93vh;
+                
             }
             
             canvas {
                 border: 1px solid black;
-                
                 image-rendering: -moz-crisp-edges;
                 image-rendering: -o-crisp-edges;
                 image-rendering: -webkit-optimize-contrast;
@@ -29,20 +40,70 @@
             }
             
             #exist {
-                flex: 0 0 33.333%;
-                overflow: scroll;
-                height: 350px;
+                overflow: auto;
+                height: 100%
             }
             
             .tile {
                 border: 1px solid black;
             }
+            
         </style>
     </head>
     <body>
+        <div id="all">
+            
+            <div id="hotbar">
+                
+                Type:
+                <select id="type"></select><button onclick="tile_type()">+</button>
+                Tool:
+                <select id="tool">
+                    <option>Place Tile To Grid</option>
+                    <option>Fill Area With Tile</option>
+                    <option>Place Tile To Pixel</option>
+                    <option>Get Grid Coordinates</option>
+                    <option>Get Pixel Coordinates</option>
+                </select>
+                <button onclick="save_assets()">Save Types & Images</button>
+                Image:
+                <select id="image"></select><button onclick="upload_image()">+</button>
+                <i id = "asset_dir">dir: placeholder directory</i>
+                <button onclick="load_assets()">Load Types & Images</button>
+                
+                Map Name: <input id="canvas_name">
+                Tile Resolution: <input id="texture_dimensions">
+                <button onclick="fgrid()">Toggle Grid</button>
+                Grid Height: <input id="exgridheight">
+                Grid Width: <input id="exgridwidth">
+                Scale: <input id="exgridscale">
+                
+                <button onclick="convert_data()">Convert</button>
+                <button onclick="save_data()">Save</button>
+                <button onclick="load_data()">Load</button>
+                <button onclick="output()">Game</button>
+                <button onclick="jsfile()">Map</button>
+                <div id="images"></div>
+            </div>
+            
+            <div id="workspace">
+                <canvas id="example"></canvas>
+            </div>
+            
+            <div id="sidelist">
+                <div id="exist">
+                    <h3>Existing Tiles</h3>
+                    <div class="tile">Tile Name Image Coordinates Delete</div>
+            
+                </div>
+            </div>
         
+        </div>
+        
+        
+        
+        <!--div id="images"></div>
         <div id="images"></div>
-        
         <p>
             Tool:
             <select id="tool">
@@ -105,6 +166,7 @@
         <br>
         <button onclick="output()">Compile To HTML Text</button>
         <button onclick="jsfile()">Compile To JAVASCRIPT File</button>
+-->
         <script>
             //engine by SuperQGS @ QGsoftware.github.io
             
@@ -139,8 +201,8 @@
                 //apply game canvas variables
                 canvas_name = document.getElementById("canvas_name").value;
                 texture_dimensions = document.getElementById("texture_dimensions").value;
-                grid_height = document.getElementById("gridheight").value * texture_dimensions;
-                grid_width = document.getElementById("gridwidth").value * texture_dimensions;
+                //grid_height = document.getElementById("gridheight").value * texture_dimensions;
+                //grid_width = document.getElementById("gridwidth").value * texture_dimensions;
                 //apply example canvas variables
                 exgrid_height = document.getElementById("exgridheight").value * texture_dimensions;
                 exgrid_width = document.getElementById("exgridwidth").value * texture_dimensions;
