@@ -54,9 +54,6 @@
         <div id="all">
             
             <div id="hotbar">
-                
-                Type:
-                <select id="type"></select><button onclick="tile_type()">+</button>
                 Tool:
                 <select id="tool">
                     <option>Place Tile To Grid</option>
@@ -65,18 +62,24 @@
                     <option>Get Grid Coordinates</option>
                     <option>Get Pixel Coordinates</option>
                 </select>
-                <button onclick="save_assets()">Save Types & Images</button>
+                Type:
+                <select id="type"></select><button onclick="tile_type()">+</button>
                 Image:
                 <select id="image"></select><button onclick="upload_image()">+</button>
-                <i id = "asset_dir">dir: placeholder directory</i>
+                <button onclick="save_assets()">Save Types & Images</button>
                 <button onclick="load_assets()">Load Types & Images</button>
+                <i id = "asset_dir">dir: placeholder directory</i>
+                
+                |
                 
                 Map Name: <input id="canvas_name">
-                Tile Resolution: <input id="texture_dimensions">
+                Tile Resolution: <input id="texture_dimensions" size="1">
+                Grid Height: <input id="exgridheight" size="1">
+                Grid Width: <input id="exgridwidth" size="1">
+                Scale: <input id="exgridscale" size="1">
                 <button onclick="fgrid()">Toggle Grid</button>
-                Grid Height: <input id="exgridheight">
-                Grid Width: <input id="exgridwidth">
-                Scale: <input id="exgridscale">
+                
+                |
                 
                 <button onclick="convert_data()">Convert</button>
                 <button onclick="save_data()">Save</button>
