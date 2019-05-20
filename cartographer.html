@@ -269,6 +269,7 @@
             var exgrid_width = 1;
             var exgrid_height = 1
             var exgrid_scale = 100
+            window.setInterval(function(){ drawcanvas(); }, 1);
             function drawcanvas() {
                 //draw example canvas
                 document.getElementById("example").width = exgrid_width;
