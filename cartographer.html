@@ -61,6 +61,8 @@
                     <option>Place Tile To Pixel</option>
                     <option>Get Grid Coordinates</option>
                     <option>Get Pixel Coordinates</option>
+                    <option>Delete</option>
+                    <option>Delete Area</option>
                 </select>
                 Type:
                 <select id="type"></select><button onclick="tile_type()">+</button>
@@ -413,8 +415,38 @@
                 if (tool == "Get Pixel Coordinates") {
                     get_pixel_coordinates(canvas, evt);
                 }
+                if (tool == "Delete") {
+                    delete_tool(canvas, evt);
+                }
+                if (tool == "Delete Area") {
+                    delete_tile_area(canvas, evt)
+                }
+                if (tool == "Delete Area [1/2]") {
+                    delete_tile_area_two(canvas, evt)
+                }
             }, false);
             
+            function delete_tool(canvas, evt) {
+                var rect = canvas.getBoundingClientRect();
+                var click_x = ((Math.floor(((evt.clientX - rect.left) / scale) / texture_dimensions) * texture_dimensions) - exgrid_width/2);
+                var click_y = ((Math.floor(((evt.clientY - rect.top) / scale) / texture_dimensions) * texture_dimensions) - exgrid_height/2);
+                
+                var change_tile;
+                var new_tile_num = 0;
+                var num_of_tiles = tiles.length - 1;
+                var tileloop = true;
+                while (tileloop) {
+                    if (new_tile_num <= num_of_tiles) {
+                        change_tile = tiles[new_tile_num];
+                        if (change_tile.x == click_x && change_tile.y == click_y) {
+                            tiles.splice(new_tile_num, 1);
+                        }
+                        new_tile_num = new_tile_num + 1;
+                    } else {
+                        tileloop = false;
+                    }
+                }
+            }
             
             //Get Mouse Position
             function place_tile_mouse(canvas, evt) {
@@ -487,6 +519,8 @@
                 
                 
             }
+            
+            
             function fill_tile_area_two(canvas, evt) {
                 var rect = canvas.getBoundingClientRect();
                 
@@ -499,11 +533,11 @@
                 
                 if (place_specific_type == "No Tile Selected" || place_specific_type == "") {
                     alert("No Tile Selected");
-                    document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option>";
+                    document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option><option>Delete</option><option>Delete Area</option>";
                     document.getElementById("tool").value = "Fill Area With Tile";
                 } else if (a_click_x > a_click2_x || a_click_y > a_click2_y) {
                     alert("Invalid use of tool. Please fill from top left to bottom right.");
-                    document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option>";
+                    document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option><option>Delete</option><option>Delete Area</option>";
                     document.getElementById("tool").value = "Fill Area With Tile";
                 } else {
                     var area_loop_x = 0;
@@ -520,10 +554,76 @@
                     }
                     existing_tiles();
                     
-                    document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option>";
+                    document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option><option>Delete</option><option>Delete Area</option>";
                     document.getElementById("tool").value = "Fill Area With Tile";
                 }
             }
+            
+            
+            //fill tile area
+            var d_click_x;
+            var d_click_y;
+            var d_click2_x;
+            var d_click2_y
+            function delete_tile_area(canvas, evt) {
+                //damage control
+                document.getElementById("tool").innerHTML = "<option>Delete Area [1/2]</option>";
+                
+                //get coords junk
+                var rect = canvas.getBoundingClientRect();
+                
+                d_click_x = ((Math.floor(((evt.clientX - rect.left) / scale) / texture_dimensions) * texture_dimensions) - exgrid_width/2);
+                d_click_y = ((Math.floor(((evt.clientY - rect.top) / scale) / texture_dimensions) * texture_dimensions) - exgrid_height/2);
+                
+            }
+            
+            function delete_tile_area_two(canvas, evt) {
+                var rect = canvas.getBoundingClientRect();
+                
+                d_click2_x = ((Math.floor(((evt.clientX - rect.left) / scale) / texture_dimensions) * texture_dimensions) - exgrid_width/2);
+                d_click2_y = ((Math.floor(((evt.clientY - rect.top) / scale) / texture_dimensions) * texture_dimensions) - exgrid_height/2);
+                
+                if (d_click_x > d_click2_x || d_click_y > d_click2_y) {
+                    alert("Invalid use of tool. Please fill from top left to bottom right.");
+                    document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option><option>Delete</option><option>Delete Area</option>";
+                    document.getElementById("tool").value = "Delete Area";
+                } else {
+                    var area_loop_x = 0;
+                    var area_loop_y = 0;
+                    
+                    while (d_click_y + (texture_dimensions * area_loop_y) <= d_click2_y) {
+                        while (d_click_x + (texture_dimensions * area_loop_x) <= d_click2_x) {
+                            var change_tile;
+                            var new_tile_num = 0;
+                            var num_of_tiles = tiles.length - 1;
+                            var tileloop = true;
+                            while (tileloop) {
+                                if (new_tile_num < num_of_tiles) {
+                                    change_tile = tiles[new_tile_num];
+                                    if (change_tile.x == d_click_x + (texture_dimensions * area_loop_x) && change_tile.y == d_click_y + (texture_dimensions * area_loop_y)) {
+                                        tiles.splice(new_tile_num, 1);
+                                    }
+                                    new_tile_num = new_tile_num + 1;
+                                    } else {
+                                        tileloop = false;
+                                }
+                            }
+                            
+                            //existing_tiles();
+                            area_loop_x = area_loop_x + 1;
+                        }
+                        area_loop_x = 0;
+                        area_loop_y = area_loop_y + 1;
+                    }
+                    existing_tiles();
+                    
+                    document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option><option>Delete</option><option>Delete Area</option>";
+                    document.getElementById("tool").value = "Delete Area";
+                }
+            }
+            
+            
+            
             
             function output() {
                 var image_html_tags = document.getElementById("images").outerHTML;
