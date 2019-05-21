@@ -432,18 +432,25 @@
                 var click_y = ((Math.floor(((evt.clientY - rect.top) / scale) / texture_dimensions) * texture_dimensions) - exgrid_height/2);
                 
                 var change_tile;
-                var new_tile_num = 0;
-                var num_of_tiles = tiles.length - 1;
+                var dnew_tile_num = 0;
+                var num_of_tiles = tiles.length;
                 var tileloop = true;
                 while (tileloop) {
-                    if (new_tile_num <= num_of_tiles) {
-                        change_tile = tiles[new_tile_num];
+                    if (dnew_tile_num < num_of_tiles - 1) {
+                        change_tile = tiles[dnew_tile_num];
                         if (change_tile.x == click_x && change_tile.y == click_y) {
-                            tiles.splice(new_tile_num, 1);
-                            exist_list.splice(new_tile_num, 1);
+                            tiles.splice(dnew_tile_num, 1);
+                            exist_list.splice(dnew_tile_num, 1);
                             existing_tiles();
                         }
-                        new_tile_num = new_tile_num + 1;
+                        dnew_tile_num = dnew_tile_num + 1;
+                    } else if(dnew_tile_num == num_of_tiles - 1){
+                        change_tile = tiles[dnew_tile_num];
+                        if (change_tile.x == click_x && change_tile.y == click_y) {
+                            tiles.splice(dnew_tile_num, 1);
+                            exist_list.splice(dnew_tile_num, 1);
+                            existing_tiles();
+                        }
                     } else {
                         tileloop = false;
                     }
@@ -631,13 +638,13 @@
                         if (change_tile.x == d_click2_x && change_tile.y == d_click2_y) {
                             tiles.splice(new_tile_num, 1);
                             exist_list.splice(new_tile_num, 1);
-                            existing_tiles();
                         }
                         new_tile_num = new_tile_num + 1;
                     } else {
                         tileloop = false;
                     }
                 }
+                existing_tiles();
             }
             
             
