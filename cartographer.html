@@ -335,7 +335,7 @@
             var exist_list = [];
             var exist_num = tiles.length - 1;
             var exist_list_html = "";
-            existing_tiles();
+            //existing_tiles();
             function existing_tiles() {
                 exist_num = 0;
                 while (exist_num < tiles.length) {
@@ -440,6 +440,8 @@
                         change_tile = tiles[new_tile_num];
                         if (change_tile.x == click_x && change_tile.y == click_y) {
                             tiles.splice(new_tile_num, 1);
+                            exist_list.splice(new_tile_num, 1);
+                            existing_tiles();
                         }
                         new_tile_num = new_tile_num + 1;
                     } else {
@@ -602,6 +604,7 @@
                                     change_tile = tiles[new_tile_num];
                                     if (change_tile.x == d_click_x + (texture_dimensions * area_loop_x) && change_tile.y == d_click_y + (texture_dimensions * area_loop_y)) {
                                         tiles.splice(new_tile_num, 1);
+                                        exist_list.splice(new_tile_num, 1);
                                     }
                                     new_tile_num = new_tile_num + 1;
                                     } else {
@@ -615,10 +618,25 @@
                         area_loop_x = 0;
                         area_loop_y = area_loop_y + 1;
                     }
-                    existing_tiles();
-                    
                     document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option><option>Delete</option><option>Delete Area</option>";
                     document.getElementById("tool").value = "Delete Area";
+                }
+                var change_tile;
+                var new_tile_num = 0;
+                var num_of_tiles = tiles.length - 1;
+                var tileloop = true;
+                while (tileloop) {
+                    if (new_tile_num <= num_of_tiles) {
+                        change_tile = tiles[new_tile_num];
+                        if (change_tile.x == d_click2_x && change_tile.y == d_click2_y) {
+                            tiles.splice(new_tile_num, 1);
+                            exist_list.splice(new_tile_num, 1);
+                            existing_tiles();
+                        }
+                        new_tile_num = new_tile_num + 1;
+                    } else {
+                        tileloop = false;
+                    }
                 }
             }
             
