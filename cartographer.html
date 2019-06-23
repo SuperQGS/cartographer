@@ -3,17 +3,22 @@
     <head>
         <meta charset="utf-8"/>
         <style>
+            
             #hotbar {
                 width: 100%;
                 border-bottom: 1px solid black;
+                
             }
+            
             #workspace {
                 border-right: 1px solid black;
                 width: 75%;
                 height: 93vh;
                 float: left;
                 overflow: scroll;
+                background-color: lightslategray;
             }
+            
             #sidelist {
                 height: 93vh;
                 
@@ -21,6 +26,7 @@
             
             canvas {
                 border: 1px solid black;
+                background-color: white;
                 image-rendering: -moz-crisp-edges;
                 image-rendering: -o-crisp-edges;
                 image-rendering: -webkit-optimize-contrast;
@@ -52,7 +58,6 @@
     </head>
     <body>
         <div id="all">
-            
             <div id="hotbar">
                 Tool:
                 <select id="tool">
@@ -90,184 +95,31 @@
                 <button onclick="jsfile()">Map</button>
                 <div id="images"></div>
             </div>
-            
             <div id="workspace">
                 <canvas id="example"></canvas>
             </div>
-            
             <div id="sidelist">
                 <div id="exist">
                     <h3>Existing Tiles</h3>
                     <div class="tile">Tile Name Image Coordinates Delete</div>
-            
                 </div>
             </div>
-        
         </div>
-        
-        
-        
-        <!--div id="images"></div>
-        <div id="images"></div>
-        <p>
-            Tool:
-            <select id="tool">
-                <option>Place Tile To Grid</option>
-                <option>Fill Area With Tile</option>
-                <option>Place Tile To Pixel</option>
-                <option>Get Grid Coordinates</option>
-                <option>Get Pixel Coordinates</option>
-            </select>
-            
-            Type:
-            <select id="type"></select><button onclick="tile_type()">+</button>
-            
-            Image:
-            <select id="image"></select><button onclick="upload_image()">+</button>
-            
-            <button onclick="save_assets()">Save Types & Images</button>
-            <button onclick="load_assets()">Load Types & Images</button>
-            <i id = "asset_dir">dir: labyrinth_save.js</i>
-            CARTOGRAPHER 1.0
-            
-            <a href="https://qgsoftware.net">qgsoftware.net</a>
-        
-        </p>
-        
-        
-        <div id="sidebyside">
-            
-        <div id="canvas">
-            <h3>Canvas Options</h3>
-            <p>Game Canvas</p>
-            Canvas Name <input id="canvas_name"><br>
-            <br>
-            Texture Dimensions <input id="texture_dimensions"><br>
-            Grid Height <input id="gridheight"><br>
-            Grid Width <input id="gridwidth"><br>
-            <p>Example Canvas</p>
-            <button onclick="fgrid()">Toggle Grid</button>
-            <button onclick="fgamebox()">Toggle Game Box</button>
-            <button onclick="toggle_wh_scale()">Toggle Scale W/H</button><br>
-            Grid Height <input id="exgridheight"><br>
-            Grid Width <input id="exgridwidth"><br>
-            Scale <input id="exgridscale"><br>
-        </div>
-            
-        <div id="exist">
-            <h3>Existing Tiles</h3>
-            <div class="tile">Tile Name Image Coordinates Delete</div>
-            
-        </div>
-        </div>
-        
-        <p>Example</p>
-        <canvas id="example"></canvas>
-        <br>
-        <button onclick="convert_data()">CONVERT OLD SAVE</button>
-        <br>
-        <button onclick="save_data()">Save</button>
-        <button onclick="load_data()">Load</button>
-        <br>
-        <button onclick="output()">Compile To HTML Text</button>
-        <button onclick="jsfile()">Compile To JAVASCRIPT File</button>
--->
         <script>
-            //engine by SuperQGS @ QGsoftware.github.io
+            //catographer v 1.0
+            //engine by SuperQGS @ qgoftware.net
             
-            //tiles
+            //_____TILES_____
+            
+            //000tiles
             var tiles = [];
             
             
-            //CANVAS OPTIONS
-            //game variables
-            var canvas_name;
-            var texture_dimensions;
-            var grid_height;
-            var grid_width;
-            
-            //example variables
-            var grid = false;
-            var gamebox = false;
-            var wvh_scale = "h";
-            var scale = 1;
-            
-            //buttons and boxes
-            //textbox values function
-            window.setInterval(function(){ textboxes(); }, 0);
-            function textboxes() {
-                if (execute_save) {
-                    load_rest();
-                    execute_save = false;
-                }
-                //image box variable
-                image_div = document.getElementById("images").innerHTML
-                
-                //apply game canvas variables
-                canvas_name = document.getElementById("canvas_name").value;
-                texture_dimensions = document.getElementById("texture_dimensions").value;
-                //grid_height = document.getElementById("gridheight").value * texture_dimensions;
-                //grid_width = document.getElementById("gridwidth").value * texture_dimensions;
-                //apply example canvas variables
-                exgrid_height = document.getElementById("exgridheight").value * texture_dimensions;
-                exgrid_width = document.getElementById("exgridwidth").value * texture_dimensions;
-                //quick if else for wvh scale
-                var width_or_height;
-                if (wvh_scale == "w") {
-                    width_or_height = document.getElementById("exgridwidth").value;
-                } else {
-                    width_or_height = document.getElementById("exgridheight").value
-                }
-                exgrid_scale = document.getElementById("exgridscale").value * texture_dimensions * width_or_height;
-                scale = document.getElementById("exgridscale").value;
-            }
-            //toggle grid function        
-            function fgrid() {
-                if (grid == true) {
-                    grid = false;
-                } else if (grid == false) {
-                    grid = true;
-                }
-            }
-            //toggle gamebox function
-            function fgamebox() {
-                if (gamebox == true) {
-                    gamebox = false;
-                } else if (gamebox == false) {
-                    gamebox = true;
-                }
-            }
-            //toggle wh scale function        
-            function toggle_wh_scale() {
-                if (wvh_scale == "w") {
-                    wvh_scale = "h";
-                } else if (wvh_scale = "h") {
-                    wvh_scale = "w";
-                }
-            }
             
             
+            //_____RENDER_____
             
-            //type function
-            var type_array = [];
-            function tile_type() {
-                //get type name
-                var type_name = prompt("type:");
-                //add type to array
-                type_array[type_array.length] = type_name;
-                //create list of types
-                var i;
-                var select_tile_list = "";
-                for (i = 0; i < type_array.length; i++) {
-                    
-                    select_tile_list = select_tile_list + "<option>" + type_array[i] + "</option>";
-                }
-                document.getElementById("type").innerHTML = select_tile_list;
-                
-            }
-            
-            
-            //DRAW CANVAS
+            //000draw canvas
             var exgrid_width = 1;
             var exgrid_height = 1
             var exgrid_scale = 100
@@ -330,8 +182,7 @@
                 }
             }
             
-            
-            //existing tiles list
+            //000existing tiles list
             var exist_list = [];
             var exist_num = tiles.length - 1;
             var exist_list_html = "";
@@ -362,37 +213,16 @@
                 drawcanvas();
             }
             
-            function delete_tile(delete_num) {
-                tiles.splice(delete_num, 1);
-                exist_list.splice(delete_num, 1);
-                existing_tiles();
-            }
             
-            var image_array = [];
-            var image_div = "";
-            function upload_image() {
-                //get type name
-                var image_id = prompt("name:");
-                var image_dir = prompt("directory:");
-                //add image to array
-                image_array[image_array.length] = image_id;
-                //create list of images
-                var i;
-                var select_tile_list = "";
-                for (i = 0; i < image_array.length; i++) {
-                    
-                    select_tile_list = select_tile_list + "<option>" + image_array[i] + "</option>";
-                }
-                document.getElementById("image").innerHTML = select_tile_list;
-                image_div = image_div + "<img src=" + image_dir +  " id=" + image_id + ">"
-                document.getElementById("images").innerHTML = image_div;
-            }
             
-            //canvas stuff for mouse click
+            
+            //_____TOOLS_____
+            
+            //000canvas info !!!
             var canvas = document.getElementById("example");
             var ctx = canvas.getContext("2d");
             
-            //detect mouse click
+            //000get selected tool
             canvas.addEventListener("click", function (evt) {
                 var tool = document.getElementById("tool").value;
                 if (tool == "Place Tile To Grid") {
@@ -426,6 +256,7 @@
                 }
             }, false);
             
+            //000delete
             function delete_tool(canvas, evt) {
                 var rect = canvas.getBoundingClientRect();
                 var click_x = ((Math.floor(((evt.clientX - rect.left) / scale) / texture_dimensions) * texture_dimensions) - exgrid_width/2);
@@ -457,7 +288,7 @@
                 }
             }
             
-            //Get Mouse Position
+            //000place tile
             function place_tile_mouse(canvas, evt) {
                 var rect = canvas.getBoundingClientRect();
                 
@@ -476,7 +307,7 @@
                 }
             }
             
-            //place to specific pixel coords
+            //000place @ pixel
             function place_specific_coords() {
                 var place_specific_x = prompt("X:");
                 var place_specific_y = prompt("Y:");
@@ -493,7 +324,7 @@
                 
             }
             
-            //get grid coordinates
+            //000get coords
             function get_grid_coordinates(canvas, evt) {
                 var rect = canvas.getBoundingClientRect();
                 
@@ -502,7 +333,7 @@
                 alert(click_x + "," + click_y);
             }
             
-            //get pixel coordinates
+            //000get pixel coords
             function get_pixel_coordinates(canvas, evt) {
                 var rect = canvas.getBoundingClientRect();
                 //this probably doesn't work but it's not used much and I don't really care
@@ -511,7 +342,7 @@
                 alert(click_x + "," + click_y);
             }
             
-            //fill tile area
+            //000fill
             var a_click_x;
             var a_click_y;
             var a_click2_x;
@@ -528,8 +359,6 @@
                 
                 
             }
-            
-            
             function fill_tile_area_two(canvas, evt) {
                 var rect = canvas.getBoundingClientRect();
                 
@@ -569,7 +398,7 @@
             }
             
             
-            //fill tile area
+            //000deletefill
             var d_click_x;
             var d_click_y;
             var d_click2_x;
@@ -585,7 +414,6 @@
                 d_click_y = ((Math.floor(((evt.clientY - rect.top) / scale) / texture_dimensions) * texture_dimensions) - exgrid_height/2);
                 
             }
-            
             function delete_tile_area_two(canvas, evt) {
                 var rect = canvas.getBoundingClientRect();
                 
@@ -650,63 +478,8 @@
             
             
             
-            function output() {
-                var image_html_tags = document.getElementById("images").outerHTML;
-                get_tiles();
-                console.log("---COMPILED--------------------------" + "\n"
-                + "-HTML IMAGE TAGS:" + "\n"
-                + image_html_tags + "\n"
-                + "-HTML CANVAS TAG:" + "\n"
-                + "<canvas id=\'" + canvas_name + "\'></canvas>" + "\n"
-                + "-CANVAS VARIABLES:" + "\n"
-                
-                    + "var canvas_name = \"" + canvas_name + "\";"
-                    + " var texture_dimensions = " + texture_dimensions + ";"
-                    + " var grid_height = " + grid_height + ";"
-                    + " var grid_width = " + grid_width + ";" + "\n"
-                
-                + "-TILES:" + "\n"
-                + "var tiles = [" + get_tile_list + "];" + "\n"
-                + "-------------------------------------");
-                
-                alert("COMPILED: Data printed to console.");
-            }
-            
-            var get_tile_list = [];
-            function get_tiles() {
-                var get_tile_num = 0;
-                
-                while (get_tile_num < tiles.length) {
-                    
-                    //console.log(tiles[get_tile_num]);
-                    
-                    var get_name = tiles[get_tile_num].type;
-                    var get_x = tiles[get_tile_num].x;
-                    var get_y = tiles[get_tile_num].y;
-                    var get_img = tiles[get_tile_num].image_string;
-                    
-                    get_tile_list[get_tile_num] = "{x:" + get_x + ", y:" + get_y + ", type:\'" + get_name + "\', image:" + get_img + ", image_string:\'" + get_img + "\'}";
-                    //[{"x":"0","y":"0","type":"t","image":tile, image_string:"hello!"}]
-                    get_tile_num = get_tile_num + 1;
-                }
-            }
-            
-            function save_data() {
-                get_tiles();
-                var save = ["[" + get_tile_list + "]", "document.getElementById(\'canvas_name\').value = \'" + canvas_name +"\';" + "document.getElementById(\'texture_dimensions\').value = " + texture_dimensions + ";" + "document.getElementById(\'gridheight\').value = " + document.getElementById("gridheight").value + ";" + "document.getElementById(\'gridwidth\').value = " + document.getElementById("gridwidth").value + ";" + "\n"]
-                var s_assets_dir = "load_assets(\'" + assets_directory + "\');";
-                var save = "tiles = [" + get_tile_list + "];";
-                var s_canvas_name = "document.getElementById(\'canvas_name\').value = \'" + canvas_name +"\';";
-                var s_texture_dimensions = "document.getElementById(\'texture_dimensions\').value = " + texture_dimensions + ";";
-                var s_gridheight = "document.getElementById(\'gridheight\').value = " + document.getElementById("gridheight").value + ";";
-                var s_gridwidth = "document.getElementById(\'gridwidth\').value = " + document.getElementById("gridwidth").value + ";";
-                
-                var save_file = s_assets_dir + "function load_rest() {" + save + s_canvas_name + s_texture_dimensions + s_gridheight + s_gridwidth + "load_followup();}";
-                
-                var file_name = prompt("Save As: (.js)")
-                download(file_name + ".js",save_file);
-            }
-            
+            //_____TYPEIMAGE_____
+            //000save assets
             function save_assets() {
                 var image_html_tags = document.getElementById("images").innerHTML;
                 var fixquotes = '\\"'
@@ -723,6 +496,8 @@
                 
                 download(title + ".js",save);
             }
+            
+            //000load assets
             var script;
             var assets;
             var assets_directory = null;
@@ -760,6 +535,141 @@
                 //fix image bug vinny mention. arrays would probably fix with a new system
             }
             
+            //000upload image
+            var image_array = [];
+            var image_div = "";
+            function upload_image() {
+                //get type name
+                var image_id = prompt("name:");
+                var image_dir = prompt("directory:");
+                //add image to array
+                image_array[image_array.length] = image_id;
+                //create list of images
+                var i;
+                var select_tile_list = "";
+                for (i = 0; i < image_array.length; i++) {
+                    
+                    select_tile_list = select_tile_list + "<option>" + image_array[i] + "</option>";
+                }
+                document.getElementById("image").innerHTML = select_tile_list;
+                image_div = image_div + "<img src=" + image_dir +  " id=" + image_id + ">"
+                document.getElementById("images").innerHTML = image_div;
+            }
+            
+            //000create type
+            var type_array = [];
+            function tile_type() {
+                //get type name
+                var type_name = prompt("type:");
+                //add type to array
+                type_array[type_array.length] = type_name;
+                //create list of types
+                var i;
+                var select_tile_list = "";
+                for (i = 0; i < type_array.length; i++) {
+                    
+                    select_tile_list = select_tile_list + "<option>" + type_array[i] + "</option>";
+                }
+                document.getElementById("type").innerHTML = select_tile_list;
+                
+            }
+            
+            
+            
+            
+            //_____OPTIONS_____
+            
+            //000canvas variables
+            var canvas_name;
+            var texture_dimensions;
+            var grid_height;
+            var grid_width;
+            
+            //000workspace variables
+            var grid = false;
+            var gamebox = false;
+            var wvh_scale = "h";
+            var scale = 1;
+            
+            //000textbox and button values
+            window.setInterval(function(){ textboxes(); }, 0);
+            function textboxes() {
+                if (execute_save) {
+                    load_rest();
+                    execute_save = false;
+                }
+                //image box variable
+                image_div = document.getElementById("images").innerHTML
+                
+                //apply game canvas variables
+                canvas_name = document.getElementById("canvas_name").value;
+                texture_dimensions = document.getElementById("texture_dimensions").value;
+                //grid_height = document.getElementById("gridheight").value * texture_dimensions;
+                //grid_width = document.getElementById("gridwidth").value * texture_dimensions;
+                //apply example canvas variables
+                exgrid_height = document.getElementById("exgridheight").value * texture_dimensions;
+                exgrid_width = document.getElementById("exgridwidth").value * texture_dimensions;
+                //quick if else for wvh scale
+                var width_or_height;
+                if (wvh_scale == "w") {
+                    width_or_height = document.getElementById("exgridwidth").value;
+                } else {
+                    width_or_height = document.getElementById("exgridheight").value
+                }
+                exgrid_scale = document.getElementById("exgridscale").value * texture_dimensions * width_or_height;
+                scale = document.getElementById("exgridscale").value;
+            }
+            
+            //000toggle grid  
+            function fgrid() {
+                if (grid == true) {
+                    grid = false;
+                } else if (grid == false) {
+                    grid = true;
+                }
+            }
+            
+            //000toggle gamebox
+            function fgamebox() {
+                if (gamebox == true) {
+                    gamebox = false;
+                } else if (gamebox == false) {
+                    gamebox = true;
+                }
+            }
+            
+            //000toggle wh scale
+            function toggle_wh_scale() {
+                if (wvh_scale == "w") {
+                    wvh_scale = "h";
+                } else if (wvh_scale = "h") {
+                    wvh_scale = "w";
+                }
+            }
+            
+            
+            
+            
+            //_____FILES_____
+            
+            //000save
+            function save_data() {
+                get_tiles();
+                var save = ["[" + get_tile_list + "]", "document.getElementById(\'canvas_name\').value = \'" + canvas_name +"\';" + "document.getElementById(\'texture_dimensions\').value = " + texture_dimensions + ";" + "document.getElementById(\'exgridheight\').value = " + document.getElementById("exgridheight").value + ";" + "document.getElementById(\'exgridwidth\').value = " + document.getElementById("exgridwidth").value + ";" + "\n"]
+                var s_assets_dir = "load_assets(\'" + assets_directory + "\');";
+                var save = "tiles = [" + get_tile_list + "];";
+                var s_canvas_name = "document.getElementById(\'canvas_name\').value = \'" + canvas_name +"\';";
+                var s_texture_dimensions = "document.getElementById(\'texture_dimensions\').value = " + texture_dimensions + ";";
+                var s_gridheight = "document.getElementById(\'exgridheight\').value = " + document.getElementById("exgridheight").value + ";";
+                var s_gridwidth = "document.getElementById(\'exgridwidth\').value = " + document.getElementById("exgridwidth").value + ";";
+                
+                var save_file = s_assets_dir + "function load_rest() {" + save + s_canvas_name + s_texture_dimensions + s_gridheight + s_gridwidth + "load_followup();}";
+                
+                var file_name = prompt("Save As: (.js)")
+                download(file_name + ".js",save_file);
+            }
+            
+            //000load
             var execute_save = false;
             function load_data(directory) {
                 if (directory == "" || directory == null) {
@@ -780,7 +690,6 @@
                     
                 }
             }
-            
             function load_followup() {
                 existing_tiles();
                     var i;
@@ -792,6 +701,37 @@
                     document.getElementById("image").innerHTML = select_tile_list;
             }
             
+            //000map download
+            function jsfile() {
+                get_tiles();
+                
+                download(canvas_name + ".js","var " + canvas_name + " = " + "[" + get_tile_list + "];");
+            }
+            
+            //000compile
+            function output() {
+                var image_html_tags = document.getElementById("images").outerHTML;
+                get_tiles();
+                console.log("---COMPILED--------------------------" + "\n"
+                + "-HTML IMAGE TAGS:" + "\n"
+                + image_html_tags + "\n"
+                + "-HTML CANVAS TAG:" + "\n"
+                + "<canvas id=\'" + canvas_name + "\'></canvas>" + "\n"
+                + "-CANVAS VARIABLES:" + "\n"
+                
+                    + "var canvas_name = \"" + canvas_name + "\";"
+                    + " var texture_dimensions = " + texture_dimensions + ";"
+                    + " var grid_height = " + grid_height + ";"
+                    + " var grid_width = " + grid_width + ";" + "\n"
+                
+                + "-TILES:" + "\n"
+                + "var tiles = [" + get_tile_list + "];" + "\n"
+                + "-------------------------------------");
+                
+                alert("COMPILED: Data printed to console.");
+            }
+            
+            //000convert
             function convert_data() {
                 var confirm_file = confirm("have you loaded an asset file?");
                 
@@ -800,15 +740,48 @@
                 
                     existing_tiles();
                 }
-                
             }
             
-            function jsfile() {
-                get_tiles();
+            //000get tiles
+            var get_tile_list = [];
+            function get_tiles() {
+                var get_tile_num = 0;
                 
-                download(canvas_name + ".js","var " + canvas_name + " = " + "[" + get_tile_list + "];");
+                while (get_tile_num < tiles.length) {
+                    
+                    //console.log(tiles[get_tile_num]);
+                    
+                    var get_name = tiles[get_tile_num].type;
+                    var get_x = tiles[get_tile_num].x;
+                    var get_y = tiles[get_tile_num].y;
+                    var get_img = tiles[get_tile_num].image_string;
+                    
+                    get_tile_list[get_tile_num] = "{x:" + get_x + ", y:" + get_y + ", type:\'" + get_name + "\', image:" + get_img + ", image_string:\'" + get_img + "\'}";
+                    //[{"x":"0","y":"0","type":"t","image":tile, image_string:"hello!"}]
+                    get_tile_num = get_tile_num + 1;
+                }
             }
             
+            
+            
+            
+            //_____MISC_____
+            
+            //000wasd
+            var scrollx = 0;
+            var scrolly = 0;
+            function wasdscroll() {
+                workspace.scrollTo(scrollx, scrolly);
+            }
+            
+            //000remove tile
+            function delete_tile(delete_num) {
+                tiles.splice(delete_num, 1);
+                exist_list.splice(delete_num, 1);
+                existing_tiles();
+            }
+            
+            //000download
             function download(filename, text) {
                 var element = document.createElement('a');
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -817,6 +790,57 @@
                 element.click();
                 document.body.removeChild(element);
             }
+            
+            
+            
+            
+            
+            //FORMATTING:
+            //_____DIRECTORY_____
+            //000section
+            
+            //DIRECTORY:
+            //tiles
+                //tiles
+            //render
+                //draw canvas
+                //existing tiles list
+            //tools
+                //canvas info
+                //get selected tool
+                //delete
+                //place tile
+                //place @ pixel
+                //get coords
+                //get pixel coords
+                //fill
+                //deletefill
+            //typeimage
+                //save assets
+                //load assets
+                //upload image
+                //create type
+            //options
+                //canvas variables
+                //workspace variables
+                //textbox and button values
+                //toggle grid
+                //toggle gamebox
+                //toggle wh scale
+            //files
+                //save
+                //load
+                //map download
+                //compile
+                //convert
+                //get tiles
+            //misc
+                //wasd
+                //remove tile
+                //download
+            
+            //TODO:
+            //organize
         </script>
         <div id="added_scripts"></div>
     </body>
