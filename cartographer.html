@@ -127,7 +127,7 @@
                 <div id="exist">
                     <h3>Layers & Tiles</h3>
                     Selected Layer:<select id="layerlist"><option>0</option></select><button onclick=add_layer()>+</button><br>
-                    []Show Layer<br>
+                    <div id="hideshow"><button onclick="hide_layer()">Hide Layer</button>(currently shown)</div>
                     Tiles:
                     <div class="tile">Tile Name Image Coordinates Delete</div>
                 </div>
@@ -140,9 +140,9 @@
             //_____TILES_____
             
             //000tiles
-            var layers = [["w","a","s","d"],[]]
-            
             var tiles = [[]]
+            
+            tiles[0].vis = true;
             
             var selected_layer = 0;
             
@@ -210,6 +210,12 @@
                     ctx.strokeStyle = "blue";
                     ctx.stroke(); ctx.stroke();
                 }
+                //hide layer button
+                if (tiles[selected_layer].vis && document.getElementById("hideshow").innerHTML !== '<button onclick="hide_layer()">Hide Layer</button>(currently shown)') {
+                    document.getElementById("hideshow").innerHTML = '<button onclick="hide_layer()">Hide Layer</button>(currently shown)';
+                } else if (!tiles[selected_layer].vis && document.getElementById("hideshow").innerHTML !== '<button onclick="show_layer()">Show Layer</button>(currently hidden)') {
+                    document.getElementById("hideshow").innerHTML = '<button onclick="show_layer()">Show Layer</button>(currently hidden)';
+                }
             }
             
             
@@ -218,15 +224,27 @@
             //!!!add layer
             var layer_ammount = 0;
             function add_layer() {
-                tiles[tiles.length] = []
+                tiles[tiles.length] = [];
+                
                 layer_ammount++
                 document.getElementById("layerlist").innerHTML = document.getElementById("layerlist").innerHTML + "<option>" + layer_ammount + "</option>";
+                tiles[layer_ammount].vis = true;
             }
             
             //!!!layer loop
             window.setInterval(function(){ layer_loop(); }, 0);
             function layer_loop() {
-                selected_layer = eval(document.getElementById("layerlist").value);
+                selected_layer = document.getElementById("layerlist").value;
+            }
+            
+            //!!!hide layer
+            function hide_layer() {
+                tiles[selected_layer].vis = false;
+            }
+            
+            //!!!show layer
+            function show_layer() {
+                tiles[selected_layer].vis = true;
             }
             
             //000existing tiles list
