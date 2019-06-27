@@ -10,9 +10,16 @@
                 
             }
             
+            #leftbar {
+                width: 5%;
+                height: 93vh;
+                float: left;
+                border-top: 1px solid black;
+            }
+            
             #workspace {
                 border-right: 1px solid black;
-                width: 75%;
+                width: 74%;
                 height: 93vh;
                 float: left;
                 overflow: scroll;
@@ -50,34 +57,33 @@
                 height: 100%
             }
             
+            #images {
+                height: 13%;
+                width: 100%;
+                overflow: scroll;
+                border: 1px solid black;
+            }
+            
             .tile {
                 border: 1px solid black;
             }
             
+            #asset_dir {
+                color: white;
+            }
         </style>
     </head>
     <body>
         <div id="all">
             <div id="hotbar">
-                Tool:
-                <select id="tool">
-                    <option>Place Tile To Grid</option>
-                    <option>Fill Area With Tile</option>
-                    <option>Place Tile To Pixel</option>
-                    <option>Get Grid Coordinates</option>
-                    <option>Get Pixel Coordinates</option>
-                    <option>Delete</option>
-                    <option>Delete Area</option>
-                </select>
-                Type:
-                <select id="type"></select><button onclick="tile_type()">+</button>
-                Image:
-                <select id="image"></select><button onclick="upload_image()">+</button>
-                <button onclick="save_assets()">Save Types & Images</button>
-                <button onclick="load_assets()">Load Types & Images</button>
-                <i id = "asset_dir">dir: placeholder directory</i>
+                <button onclick="save_data()">Save</button>
+                <button onclick="load_data()">Load</button>
+                <button onclick="convert_data()">Convert</button>
+                <button onclick="output()">Game</button>
+                <button onclick="jsfile()">Map</button>
                 
                 |
+                
                 
                 Map Name: <input id="canvas_name">
                 Tile Resolution: <input id="texture_dimensions" size="1">
@@ -86,21 +92,43 @@
                 Scale: <input id="exgridscale" size="1">
                 <button onclick="fgrid()">Toggle Grid</button>
                 
-                |
+            </div>
+            <div id="leftbar">
+                Select:<br>
+                Type:
+                <select id="type"></select><button onclick="tile_type()">+</button><br>
+                Image:
+                <select id="image"></select><button onclick="upload_image()">+</button><br>
                 
-                <button onclick="convert_data()">Convert</button>
-                <button onclick="save_data()">Save</button>
-                <button onclick="load_data()">Load</button>
-                <button onclick="output()">Game</button>
-                <button onclick="jsfile()">Map</button>
+                Images:
                 <div id="images"></div>
+                
+                <button onclick="save_assets()">Save Types & Images</button><br>
+                <button onclick="load_assets()">Load Types & Images</button><br>
+                <i id = "asset_dir">dir: placeholder directory</i><br>
+                
+                Tools:
+                <select id="tool">
+                    <option>Place Tile To Grid</option>
+                    <option>Fill Area With Tile</option>
+                    <option>Place Tile To Pixel</option>
+                    <option>Get Grid Coordinates</option>
+                    <option>Get Pixel Coordinates</option>
+                    <option>Delete</option>
+                    <option>Delete Area</option>
+                </select><br>
+                
+                
             </div>
             <div id="workspace">
                 <canvas id="example"></canvas>
             </div>
             <div id="sidelist">
                 <div id="exist">
-                    <h3>Existing Tiles</h3>
+                    <h3>Layers & Tiles</h3>
+                    Selected Layer:<select id="layerlist"><option>0</option></select><button onclick=add_layer()>+</button><br>
+                    []Show Layer<br>
+                    Tiles:
                     <div class="tile">Tile Name Image Coordinates Delete</div>
                 </div>
             </div>
@@ -112,9 +140,11 @@
             //_____TILES_____
             
             //000tiles
-            var tiles = [];
+            var layers = [["w","a","s","d"],[]]
             
+            var tiles = [[]]
             
+            var selected_layer = 0;
             
             
             //_____RENDER_____
@@ -140,11 +170,11 @@
                 //render tiles
                 var change_tile;
                 var new_tile_num = 0;
-                var num_of_tiles = tiles.length - 1;
+                var num_of_tiles = tiles[selected_layer].length - 1;
                 var tileloop = true;
                 while (tileloop) {
                     if (new_tile_num <= num_of_tiles) {
-                        change_tile = tiles[new_tile_num];
+                        change_tile = tiles[selected_layer][new_tile_num];
                         ctx.drawImage(change_tile.image, change_tile.x, change_tile.y);
                         new_tile_num = new_tile_num + 1;
                     } else {
@@ -182,19 +212,36 @@
                 }
             }
             
+            
+            
+            
+            //!!!add layer
+            var layer_ammount = 0;
+            function add_layer() {
+                tiles[tiles.length] = []
+                layer_ammount++
+                document.getElementById("layerlist").innerHTML = document.getElementById("layerlist").innerHTML + "<option>" + layer_ammount + "</option>";
+            }
+            
+            //!!!layer loop
+            window.setInterval(function(){ layer_loop(); }, 0);
+            function layer_loop() {
+                selected_layer = eval(document.getElementById("layerlist").value);
+            }
+            
             //000existing tiles list
             var exist_list = [];
-            var exist_num = tiles.length - 1;
+            var exist_num = tiles[selected_layer].length - 1;
             var exist_list_html = "";
             //existing_tiles();
             function existing_tiles() {
                 exist_num = 0;
-                while (exist_num < tiles.length) {
+                while (exist_num < tiles[selected_layer].length) {
                     //console.log(tiles[exist_num]);
-                    var exist_name = tiles[exist_num].type;
-                    var exist_x = tiles[exist_num].x;
-                    var exist_y = tiles[exist_num].y;
-                    var exist_img = tiles[exist_num].image_string;
+                    var exist_name = tiles[selected_layer][exist_num].type;
+                    var exist_x = tiles[selected_layer][exist_num].x;
+                    var exist_y = tiles[selected_layer][exist_num].y;
+                    var exist_img = tiles[selected_layer][exist_num].image_string;
                     
                     exist_list[exist_num] = '<div class="tile">' + exist_num + ' ' + exist_name + " " + exist_img + ' (' + exist_x + ',' + exist_y + ') <button onclick=\"delete_tile(' + exist_num +  ')\">Delete</button></div>';
                     
@@ -209,7 +256,7 @@
                     exist_num = exist_num + 1;
                 }
                 
-                document.getElementById("exist").innerHTML = '<h3>Existing Tiles</h3>' + '<div class="tile"># Name Image (Coordinates) Delete</div>' + exist_list_html;
+                document.getElementById("exist").innerHTML = '<h3>Layers</h3>Selected Layer:<select></select><button>+</button><br>[]Show Layer<br>Tiles:<div class="tile">Tile Name Image Coordinates Delete</div>' + exist_list_html;
                 drawcanvas();
             }
             
@@ -264,23 +311,23 @@
                 
                 var change_tile;
                 var dnew_tile_num = 0;
-                var num_of_tiles = tiles.length;
+                var num_of_tiles = tiles[selected_layer].length;
                 var tileloop = true;
                 while (tileloop) {
                     if (dnew_tile_num < num_of_tiles - 1) {
-                        change_tile = tiles[dnew_tile_num];
+                        change_tile = tiles[selected_layer][dnew_tile_num];
                         if (change_tile.x == click_x && change_tile.y == click_y) {
-                            tiles.splice(dnew_tile_num, 1);
+                            tiles[selected_layer].splice(dnew_tile_num, 1);
                             exist_list.splice(dnew_tile_num, 1);
-                            existing_tiles();
+                            //existing_tiles();
                         }
                         dnew_tile_num = dnew_tile_num + 1;
                     } else if(dnew_tile_num == num_of_tiles - 1){
-                        change_tile = tiles[dnew_tile_num];
+                        change_tile = tiles[selected_layer][dnew_tile_num];
                         if (change_tile.x == click_x && change_tile.y == click_y) {
-                            tiles.splice(dnew_tile_num, 1);
+                            tiles[selected_layer].splice(dnew_tile_num, 1);
                             exist_list.splice(dnew_tile_num, 1);
-                            existing_tiles();
+                            //existing_tiles();
                         }
                     } else {
                         tileloop = false;
@@ -302,8 +349,8 @@
                 if (place_specific_type == "No Tile Selected" || place_specific_type == "") {
                     alert("No Tile Selected");
                 } else {
-                    tiles[tiles.length] = {x:click_x, y:click_y, type:place_specific_type, image:place_specific_image, image_string:place_specific_image_string};
-                    existing_tiles();
+                    tiles[selected_layer][tiles[selected_layer].length] = {x:click_x, y:click_y, type:place_specific_type, image:place_specific_image, image_string:place_specific_image_string};
+                    //existing_tiles();
                 }
             }
             
@@ -318,8 +365,8 @@
                 if (place_specific_type == "No Tile Selected" || place_specific_type == "") {
                     alert("No Tile Selected");
                 } else {
-                    tiles[tiles.length] = {x:place_specific_x, y:place_specific_y, type:place_specific_type, image:place_specific_image, image_string:place_specific_image_string};
-                    existing_tiles();
+                    tiles[selected_layer][tiles[selected_layer].length] = {x:place_specific_x, y:place_specific_y, type:place_specific_type, image:place_specific_image, image_string:place_specific_image_string};
+                    //existing_tiles();
                 }
                 
             }
@@ -383,14 +430,14 @@
                     
                     while (a_click_y + (texture_dimensions * area_loop_y) <= a_click2_y) {
                         while (a_click_x + (texture_dimensions * area_loop_x) <= a_click2_x) {
-                            tiles[tiles.length] = {x:a_click_x + (texture_dimensions * area_loop_x), y:a_click_y + (texture_dimensions * area_loop_y), type:place_specific_type, image:place_specific_image, image_string:place_specific_image_string};
-                            //existing_tiles();
+                            tiles[selected_layer][tiles[selected_layer].length] = {x:a_click_x + (texture_dimensions * area_loop_x), y:a_click_y + (texture_dimensions * area_loop_y), type:place_specific_type, image:place_specific_image, image_string:place_specific_image_string};
+                            //nooexisting_tiles();
                             area_loop_x = area_loop_x + 1;
                         }
                         area_loop_x = 0;
                         area_loop_y = area_loop_y + 1;
                     }
-                    existing_tiles();
+                    //existing_tiles();
                     
                     document.getElementById("tool").innerHTML = "<option>Place Tile To Grid</option><option>Fill Area With Tile</option><option>Place Tile To Pixel</option><option>Get Grid Coordinates</option><option>Get Pixel Coordinates</option><option>Delete</option><option>Delete Area</option>";
                     document.getElementById("tool").value = "Fill Area With Tile";
@@ -432,13 +479,13 @@
                         while (d_click_x + (texture_dimensions * area_loop_x) <= d_click2_x) {
                             var change_tile;
                             var new_tile_num = 0;
-                            var num_of_tiles = tiles.length - 1;
+                            var num_of_tiles = tiles[selected_layer].length - 1;
                             var tileloop = true;
                             while (tileloop) {
                                 if (new_tile_num < num_of_tiles) {
-                                    change_tile = tiles[new_tile_num];
+                                    change_tile = tiles[selected_layer][new_tile_num];
                                     if (change_tile.x == d_click_x + (texture_dimensions * area_loop_x) && change_tile.y == d_click_y + (texture_dimensions * area_loop_y)) {
-                                        tiles.splice(new_tile_num, 1);
+                                        tiles[selected_layer].splice(new_tile_num, 1);
                                         exist_list.splice(new_tile_num, 1);
                                     }
                                     new_tile_num = new_tile_num + 1;
@@ -447,7 +494,7 @@
                                 }
                             }
                             
-                            //existing_tiles();
+                            //noexisting_tiles();
                             area_loop_x = area_loop_x + 1;
                         }
                         area_loop_x = 0;
@@ -458,13 +505,13 @@
                 }
                 var change_tile;
                 var new_tile_num = 0;
-                var num_of_tiles = tiles.length - 1;
+                var num_of_tiles = tiles[selected_layer].length - 1;
                 var tileloop = true;
                 while (tileloop) {
                     if (new_tile_num <= num_of_tiles) {
-                        change_tile = tiles[new_tile_num];
+                        change_tile = tiles[selected_layer][new_tile_num];
                         if (change_tile.x == d_click2_x && change_tile.y == d_click2_y) {
-                            tiles.splice(new_tile_num, 1);
+                            tiles[selected_layer].splice(new_tile_num, 1);
                             exist_list.splice(new_tile_num, 1);
                         }
                         new_tile_num = new_tile_num + 1;
@@ -472,7 +519,7 @@
                         tileloop = false;
                     }
                 }
-                existing_tiles();
+                //existing_tiles();
             }
             
             
@@ -691,7 +738,7 @@
                 }
             }
             function load_followup() {
-                existing_tiles();
+                //existing_tiles();
                     var i;
                     var select_tile_list = "";
                     for (i = 0; i < image_array.length; i++) {
@@ -738,7 +785,7 @@
                 if (confirm_file) {
                     tiles = eval(prompt("TILE ARRAY:"));
                 
-                    existing_tiles();
+                    //existing_tiles();
                 }
             }
             
@@ -747,14 +794,14 @@
             function get_tiles() {
                 var get_tile_num = 0;
                 
-                while (get_tile_num < tiles.length) {
+                while (get_tile_num < tiles[selected_layer].length) {
                     
                     //console.log(tiles[get_tile_num]);
                     
-                    var get_name = tiles[get_tile_num].type;
-                    var get_x = tiles[get_tile_num].x;
-                    var get_y = tiles[get_tile_num].y;
-                    var get_img = tiles[get_tile_num].image_string;
+                    var get_name = tiles[selected_layer][get_tile_num].type;
+                    var get_x = tiles[selected_layer][get_tile_num].x;
+                    var get_y = tiles[selected_layer][get_tile_num].y;
+                    var get_img = tiles[selected_layer][get_tile_num].image_string;
                     
                     get_tile_list[get_tile_num] = "{x:" + get_x + ", y:" + get_y + ", type:\'" + get_name + "\', image:" + get_img + ", image_string:\'" + get_img + "\'}";
                     //[{"x":"0","y":"0","type":"t","image":tile, image_string:"hello!"}]
@@ -776,9 +823,9 @@
             
             //000remove tile
             function delete_tile(delete_num) {
-                tiles.splice(delete_num, 1);
+                tiles[selected_layer].splice(delete_num, 1);
                 exist_list.splice(delete_num, 1);
-                existing_tiles();
+                //existing_tiles();
             }
             
             //000download
@@ -840,7 +887,15 @@
                 //download
             
             //TODO:
-            //organize
+            //Layers
+            //Select Tile
+            //Select multiple tiles
+            //move selected tile(s)
+            //edit selected tile(s) type, image
+            //copy/paste tiles
+            //make game engine todo
+            //custom values
+            //fix delete and deletearea
         </script>
         <div id="added_scripts"></div>
     </body>
