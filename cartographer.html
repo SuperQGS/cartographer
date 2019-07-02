@@ -134,6 +134,8 @@
             </div>
         </div>
         <script>
+            
+            
             //catographer v 1.0
             //engine by SuperQGS @ qgoftware.net
             
@@ -169,18 +171,32 @@
                 
                 //render tiles
                 var change_tile;
-                var new_tile_num = 0;
-                var num_of_tiles = tiles[selected_layer].length - 1;
-                var tileloop = true;
-                while (tileloop) {
-                    if (new_tile_num <= num_of_tiles) {
-                        change_tile = tiles[selected_layer][new_tile_num];
-                        ctx.drawImage(change_tile.image, change_tile.x, change_tile.y);
-                        new_tile_num = new_tile_num + 1;
-                    } else {
-                        tileloop = false;
+                var num_of_tiles = tiles.length - 1;
+                
+                var layer;
+                var tile;
+                for (layer = 0; layer < tiles.length; layer++) {
+                    if (tiles[layer].vis) {
+                        num_of_tiles = tiles[layer].length;
+                        for (tile = 0; tile < num_of_tiles; tile++) {
+                            change_tile = tiles[layer][tile];
+                            ctx.drawImage(change_tile.image, change_tile.x, change_tile.y);
+                        }
+                        
                     }
                 }
+                
+                
+                
+                
+                //unused
+//                var ff;
+//                for (ff = 0; ff < num_of_tiles; ff++) {
+//                    change_tile = tiles[selected_layer][ff];
+//                        if (tiles[selected_layer].vis) {
+//                            ctx.drawImage(change_tile.image, change_tile.x, change_tile.y);
+//                        }
+//                }
                 
                 //grid and gamebox
                 //grid
@@ -914,6 +930,9 @@
             //make game engine todo
             //custom values
             //fix delete and deletearea
+            
+            //devtemp
+            //load_assets("labyrinth_assets.js");
         </script>
         <div id="added_scripts"></div>
     </body>
