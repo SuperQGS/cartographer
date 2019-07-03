@@ -134,8 +134,6 @@
             </div>
         </div>
         <script>
-            
-            
             //catographer v 1.0
             //engine by SuperQGS @ qgoftware.net
             
@@ -189,7 +187,7 @@
                 
                 
                 
-                //unused
+                //unused render optomized
 //                var ff;
 //                for (ff = 0; ff < num_of_tiles; ff++) {
 //                    change_tile = tiles[selected_layer][ff];
@@ -234,35 +232,6 @@
                 }
             }
             
-            
-            
-            
-            //!!!add layer
-            var layer_ammount = 0;
-            function add_layer() {
-                tiles[tiles.length] = [];
-                
-                layer_ammount++
-                document.getElementById("layerlist").innerHTML = document.getElementById("layerlist").innerHTML + "<option>" + layer_ammount + "</option>";
-                tiles[layer_ammount].vis = true;
-            }
-            
-            //!!!layer loop
-            window.setInterval(function(){ layer_loop(); }, 0);
-            function layer_loop() {
-                selected_layer = document.getElementById("layerlist").value;
-            }
-            
-            //!!!hide layer
-            function hide_layer() {
-                tiles[selected_layer].vis = false;
-            }
-            
-            //!!!show layer
-            function show_layer() {
-                tiles[selected_layer].vis = true;
-            }
-            
             //000existing tiles list
             var exist_list = [];
             var exist_num = tiles[selected_layer].length - 1;
@@ -292,6 +261,37 @@
                 
                 document.getElementById("exist").innerHTML = '<h3>Layers</h3>Selected Layer:<select></select><button>+</button><br>[]Show Layer<br>Tiles:<div class="tile">Tile Name Image Coordinates Delete</div>' + exist_list_html;
                 drawcanvas();
+            }
+            
+            
+            
+            
+            //_____LAYERS_____
+            
+            //000add layer
+            var layer_ammount = 0;
+            function add_layer() {
+                tiles[tiles.length] = [];
+                
+                layer_ammount++
+                document.getElementById("layerlist").innerHTML = document.getElementById("layerlist").innerHTML + "<option>" + layer_ammount + "</option>";
+                tiles[layer_ammount].vis = true;
+            }
+            
+            //000layer loop
+            window.setInterval(function(){ layer_loop(); }, 0);
+            function layer_loop() {
+                selected_layer = document.getElementById("layerlist").value;
+            }
+            
+            //000hide layer
+            function hide_layer() {
+                tiles[selected_layer].vis = false;
+            }
+            
+            //000show layer
+            function show_layer() {
+                tiles[selected_layer].vis = true;
             }
             
             
@@ -886,6 +886,11 @@
             //render
                 //draw canvas
                 //existing tiles list
+            //layers
+                //add layer
+                //layer loop
+                //hide layer
+                //show layer
             //tools
                 //canvas info
                 //get selected tool
@@ -921,18 +926,18 @@
                 //download
             
             //TODO:
-            //Layers
+            //redo save and load
             //Select Tile
             //Select multiple tiles
             //move selected tile(s)
             //edit selected tile(s) type, image
-            //copy/paste tiles
+            //copy/paste selected tile(s)
             //make game engine todo
-            //custom values
+            //custom values edit:???????
             //fix delete and deletearea
             
             //devtemp
-            //load_assets("labyrinth_assets.js");
+            load_assets("labyrinth_assets.js");
         </script>
         <div id="added_scripts"></div>
     </body>
