@@ -67,10 +67,6 @@
             .tile {
                 border: 1px solid black;
             }
-            
-            #asset_dir {
-                color: white;
-            }
         </style>
     </head>
     <body>
@@ -81,6 +77,7 @@
                 <button onclick="convert_data()">Convert</button>
                 <button onclick="output()">Game</button>
                 <button onclick="jsfile()">Map</button>
+                <i id = "asset_dir"></i>
                 
                 |
                 
@@ -105,7 +102,7 @@
                 
                 <button onclick="save_assets()">Save Types & Images</button><br>
                 <button onclick="load_assets()">Load Types & Images</button><br>
-                <i id = "asset_dir">dir: placeholder directory</i><br>
+                <br>
                 
                 Tools:
                 <select id="tool">
@@ -587,7 +584,7 @@
                     var temp_dir = prompt("Assets Save File Directory:");
                     load_assets(temp_dir);
                 } else {
-                    document.getElementById("asset_dir").innerHTML = "dir: " + directory;
+                    
                     
                     //load js file yes!
                     script = document.createElement("script");
@@ -675,10 +672,7 @@
             //000textbox and button values
             window.setInterval(function(){ textboxes(); }, 0);
             function textboxes() {
-                if (execute_save) {
-                    load_rest();
-                    execute_save = false;
-                }
+                
                 //image box variable
                 image_div = document.getElementById("images").innerHTML
                 
@@ -736,50 +730,30 @@
             //000save
             function save_data() {
                 get_tiles();
-                var save = ["[" + get_tile_list + "]", "document.getElementById(\'canvas_name\').value = \'" + canvas_name +"\';" + "document.getElementById(\'texture_dimensions\').value = " + texture_dimensions + ";" + "document.getElementById(\'exgridheight\').value = " + document.getElementById("exgridheight").value + ";" + "document.getElementById(\'exgridwidth\').value = " + document.getElementById("exgridwidth").value + ";" + "\n"]
-                var s_assets_dir = "load_assets(\'" + assets_directory + "\');";
-                var save = "tiles = [" + get_tile_list + "];";
-                var s_canvas_name = "document.getElementById(\'canvas_name\').value = \'" + canvas_name +"\';";
-                var s_texture_dimensions = "document.getElementById(\'texture_dimensions\').value = " + texture_dimensions + ";";
-                var s_gridheight = "document.getElementById(\'exgridheight\').value = " + document.getElementById("exgridheight").value + ";";
-                var s_gridwidth = "document.getElementById(\'exgridwidth\').value = " + document.getElementById("exgridwidth").value + ";";
                 
-                var save_file = s_assets_dir + "function load_rest() {" + save + s_canvas_name + s_texture_dimensions + s_gridheight + s_gridwidth + "load_followup();}";
+                var save_file = "function save_func(){ " + "load_assets('" + assets_directory + "'); " + "document.getElementById('canvas_name').value='" + canvas_name + "'; document.getElementById('texture_dimensions').value=" + texture_dimensions + "; " +"tiles=[" + get_tile_list + "]; " + get_vis_list + " } save_func();"
                 
                 var file_name = prompt("Save As: (.js)")
                 download(file_name + ".js",save_file);
             }
             
             //000load
-            var execute_save = false;
             function load_data(directory) {
                 if (directory == "" || directory == null) {
                     var temp_dir = prompt("Save File Directory:");
                     load_data(temp_dir);
                     
                 } else {
-                    document.getElementById("asset_dir").innerHTML = "dir: " + directory;
+                    document.getElementById("asset_dir").innerHTML = "file: " + directory;
                     
                     //load js file yes!
                     script = document.createElement("script");
                     script.src = directory;
                     //alert(script);
                     document.body.appendChild(script);
-                    
-                    //continue
-                    execute_save = true;
+                    document.getElementById("asset_dir").innerHTML = "file: " + directory;
                     
                 }
-            }
-            function load_followup() {
-                //existing_tiles();
-                    var i;
-                    var select_tile_list = "";
-                    for (i = 0; i < image_array.length; i++) {
-                    
-                        select_tile_list = select_tile_list + "<option>" + image_array[i] + "</option>";
-                    }
-                    document.getElementById("image").innerHTML = select_tile_list;
             }
             
             //000map download
@@ -825,21 +799,27 @@
             
             //000get tiles
             var get_tile_list = [];
+            var get_vis_list = "";
             function get_tiles() {
-                var get_tile_num = 0;
-                
-                while (get_tile_num < tiles[selected_layer].length) {
+                for (j = 0; j < tiles.length; j++) {
                     
-                    //console.log(tiles[get_tile_num]);
+                    var get_single_list = [];
+                    for (i = 0; i < tiles[j].length; i++) {
+                        var get_name = tiles[j][i].type;
+                        var get_x = tiles[j][i].x;
+                        var get_y = tiles[j][i].y;
+                        var get_img = tiles[j][i].image_string;
+                        
+                        get_single_list[i] = "{x:" + get_x + ", y:" + get_y + ", type:\'" + get_name + "\', image:" + get_img + ", image_string:\'" + get_img + "\'}";
+                    }
+                    get_tile_list[j] = "[" + get_single_list + "]";
                     
-                    var get_name = tiles[selected_layer][get_tile_num].type;
-                    var get_x = tiles[selected_layer][get_tile_num].x;
-                    var get_y = tiles[selected_layer][get_tile_num].y;
-                    var get_img = tiles[selected_layer][get_tile_num].image_string;
+                    if (tiles[j].vis) {
+                        get_vis_list = get_vis_list + "tiles[" + j + "].vis=true;"
+                    } else {
+                        get_vis_list = get_vis_list + "tiles[" + j + "].vis=false;"
+                    }
                     
-                    get_tile_list[get_tile_num] = "{x:" + get_x + ", y:" + get_y + ", type:\'" + get_name + "\', image:" + get_img + ", image_string:\'" + get_img + "\'}";
-                    //[{"x":"0","y":"0","type":"t","image":tile, image_string:"hello!"}]
-                    get_tile_num = get_tile_num + 1;
                 }
             }
             
@@ -926,7 +906,7 @@
                 //download
             
             //TODO:
-            //redo save and load
+            //automatically list out layers
             //Select Tile
             //Select multiple tiles
             //move selected tile(s)
@@ -935,6 +915,9 @@
             //make game engine todo
             //custom values edit:???????
             //fix delete and deletearea
+            //replace while loops with for loops
+            //layer name
+            //documentation/code explaination
             
             //devtemp
             load_assets("labyrinth_assets.js");
