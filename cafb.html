@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <style>
+            * {
+                text-align: center;
+            }
+            
+            #library {
+                height:30%;
+                width: 100%;
+                overflow: scroll;
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Cartographer Asset File Builder</h1>
+        <button>Save</button><button>Load</button>
+        <hr>
+        <h4>Image Assets:</h4>
+        Name | Source - Delete<br>
+        <select id="image"></select>-<button onclick="upload_image()">+</button><button onclick="delete_image()">-</button><br>
+        Library:<br>
+        <div id="library"></div>
+
+        <h4>Type Assets:</h4>
+        Name - Buttons<br>
+        <select></select>-<button>+</button><button>-</button><br>
+        SubType - Buttons<br>
+        <select></select>-<button>+</button><button>-</button><br>
+        
+        
+        
+        <script>
+            var image_array = [];
+            var dir_array = [];
+            var image_div = "";
+            function upload_image() {
+                //get type name
+                var image_id = prompt("name:");
+                var image_dir = prompt("directory:");
+                //add image to array
+                image_array[image_array.length] = image_id;
+                dir_array[dir_array.length] = image_dir;
+                
+                compile_library();
+            }
+            
+            function delete_image() {
+                var img_delete = document.getElementById("image").value;
+                //create list of images
+                for (i = 0; i < image_array.length; i++) {
+                    if (img_delete == image_array[i] + " | " + dir_array[i]) {
+                        image_array.splice(i,1);
+                        dir_array.splice(i,1);
+                    }
+                    
+                }
+                compile_library();
+            }
+            
+            function compile_library() {
+                var image_div = "";
+                for (i = 0; i < image_array.length; i++) {
+                    image_div = image_div + "<img src=" + dir_array[i] +  " id=" + image_array[i] + ">"
+                
+                }
+                document.getElementById("library").innerHTML = image_div;
+                //create list of images
+                var i;
+                var select_tile_list = "";
+                for (i = 0; i < image_array.length; i++) {
+                    
+                    select_tile_list = select_tile_list + "<option>" + image_array[i] + " | " + dir_array[i] + "</option>";
+                }
+                document.getElementById("image").innerHTML = select_tile_list;
+            }
+            
+        </script>
+    </body>
+</html>
