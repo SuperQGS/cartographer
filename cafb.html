@@ -17,19 +17,21 @@
     </head>
     <body>
         <h1>Cartographer Asset File Builder</h1>
-        <button>Save</button><button>Load</button>
         <hr>
         <h4>Image Assets:</h4>
-        Name | Source - Delete<br>
+        <button>Save</button><button>Load</button><br>
+        Name | Source<br>
         <select id="image"></select>-<button onclick="upload_image()">+</button><button onclick="delete_image()">-</button><br>
         Library:<br>
         <div id="library"></div>
 
         <h4>Type Assets:</h4>
-        Name - Buttons<br>
-        <select></select>-<button>+</button><button>-</button><br>
-        SubType - Buttons<br>
-        <select></select>-<button>+</button><button>-</button><br>
+        <button>Save</button><button>Load</button><br>
+        Type<br>
+        <select id="type"></select>-<button onclick="create_type()">+</button><button onclick="delete_type()">-</button><br>
+        SubType<br>
+        <select></select>-<button onclick="create_sub()">+</button><button>-</button><br>
+        default:<input id="default">
         
         
         
@@ -78,6 +80,62 @@
                 document.getElementById("image").innerHTML = select_tile_list;
             }
             
+        </script>
+        <script>
+            var testtypes = [
+                {
+                    type:"hey",
+                    subtypes:["w","a","s","d"],
+                    defaults:["","","","",""]
+                }
+            ]
+            //-------------------------------------------
+            var type_array = []
+            
+            function create_type() {
+                //get type name
+                var type_string = prompt("name:");
+                //add image to array
+                type_array[type_array.length] = {};
+                type_array[type_array.length - 1].type = type_string;
+                
+                compile_type_list();
+            }
+            
+            function compile_type_list() {
+                //create list of images
+                var i;
+                var select_tile_list = "";
+                for (i = 0; i < type_array.length; i++) {
+                    
+                    select_tile_list = select_tile_list + "<option>" + type_array[i].type + "</option>";
+                }
+                document.getElementById("type").innerHTML = select_tile_list;
+            }
+            
+            function delete_type() {
+                var type_delete = document.getElementById("type").value;
+                //create list of images
+                for (i = 0; i < type_array.length; i++) {
+                    if (type_delete == type_array[i].type) {
+                        type_array.splice(i,1);
+                    }
+                }
+                compile_type_list();
+            }
+            
+            function create_sub() {
+                //get type name
+                var sub_string = prompt("name:");
+                
+                var selected = document.getElementById("type").value;
+                //create list of images
+                for (i = 0; i < type_array.length; i++) {
+                    if (selected == type_array[i].type) {
+                        eval("type_array[i]." + sub_string + " = ''");
+                    }
+                }
+            }
         </script>
     </body>
 </html>
