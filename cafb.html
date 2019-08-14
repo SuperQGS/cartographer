@@ -19,14 +19,14 @@
         <h1>Cartographer Asset File Builder</h1>
         <hr>
         <h4>Image Assets:</h4>
-        <button>Save</button><button>Load</button><br>
+        <button onclick="download_images()">Save</button><button>Load</button><br>
         Name | Source<br>
         <select id="image"></select>-<button onclick="upload_image()">+</button><button onclick="delete_image()">-</button><br>
         Library:<br>
         <div id="library"></div>
 
         <h4>Type Assets:</h4>
-        <button>Save</button><button>Load</button><br>
+        <button onclick="download_types()">Save</button><button>Load</button><br>
         Type<br>
         <select id="type" onclick="compile_sub_list()"></select>-<button onclick="create_type()">+</button><button onclick="delete_type()">-</button><br>
         SubType<br>
@@ -80,6 +80,11 @@
                 document.getElementById("image").innerHTML = select_tile_list;
             }
             
+            function download_images() {
+                image_dl = "image_array = " + JSON.stringify(image_array) + "; dir_array = " + JSON.stringify(dir_array) + ";"
+                var file_name = prompt("file name:");
+                download(file_name + "_wad.js",image_dl);
+            }
         </script>
         <script>
             var testtypes = [
@@ -179,8 +184,25 @@
             
             function download_types() {
                 type_dl = "type_array = " + JSON.stringify(type_array) + "; sub_array = " + JSON.stringify(sub_array) + ";"
+                var file_name = prompt("file name:");
+                download(file_name + "_fgd.js",type_dl);
             }
             //note: JSON.stringify strings and fixes [object Object]
         </script>
+        <script>
+            function download(filename, text) {
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+            }
+        </script>
+        <hr>
+        <p>FEATURES TODO<br>
+        -Subtype Defaults<br>
+        -Load wads<br>
+        -Load fgds</p>
     </body>
 </html>
