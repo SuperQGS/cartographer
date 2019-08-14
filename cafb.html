@@ -28,9 +28,9 @@
         <h4>Type Assets:</h4>
         <button>Save</button><button>Load</button><br>
         Type<br>
-        <select id="type"></select>-<button onclick="create_type()">+</button><button onclick="delete_type()">-</button><br>
+        <select id="type" onclick="compile_sub_list()"></select>-<button onclick="create_type()">+</button><button onclick="delete_type()">-</button><br>
         SubType<br>
-        <select></select>-<button onclick="create_sub()">+</button><button>-</button><br>
+        <select id="sub"></select>-<button onclick="create_sub()">+</button><button onclick="delete_sub()">-</button><br>
         default:<input id="default">
         
         
@@ -90,14 +90,16 @@
                 }
             ]
             //-------------------------------------------
-            var type_array = []
+            var type_array = [];
+            var sub_array = [];
+            var default_array = [];
             
             function create_type() {
                 //get type name
                 var type_string = prompt("name:");
                 //add image to array
-                type_array[type_array.length] = {};
-                type_array[type_array.length - 1].type = type_string;
+                
+                type_array[type_array.length] = type_string;
                 
                 compile_type_list();
             }
@@ -108,16 +110,17 @@
                 var select_tile_list = "";
                 for (i = 0; i < type_array.length; i++) {
                     
-                    select_tile_list = select_tile_list + "<option>" + type_array[i].type + "</option>";
+                    select_tile_list = select_tile_list + "<option>" + type_array[i] + "</option>";
                 }
                 document.getElementById("type").innerHTML = select_tile_list;
+                compile_sub_list();
             }
             
             function delete_type() {
                 var type_delete = document.getElementById("type").value;
                 //create list of images
                 for (i = 0; i < type_array.length; i++) {
-                    if (type_delete == type_array[i].type) {
+                    if (type_delete == type_array[i]) {
                         type_array.splice(i,1);
                     }
                 }
@@ -131,11 +134,53 @@
                 var selected = document.getElementById("type").value;
                 //create list of images
                 for (i = 0; i < type_array.length; i++) {
-                    if (selected == type_array[i].type) {
-                        eval("type_array[i]." + sub_string + " = ''");
+                    if (selected == type_array[i]) {
+                        if (sub_array[i] == undefined) {
+                            sub_array[i] = []
+                        }
+                        sub_array[i][sub_array[i].length] = sub_string;
                     }
                 }
+                
+                compile_sub_list();
             }
+            
+            function delete_sub() {
+                var type_delete = document.getElementById("sub").value;
+                //create list of images
+                for (i = 0; i < sub_array.length; i++) {
+                    if (type_delete == sub_array[i]) {
+                        sub_array.splice(i,1);
+                    }
+                }
+                compile_sub_list();
+            }
+            
+            function compile_sub_list() {
+                var select_sub_list = "";
+                var type_find = document.getElementById("type").value;
+                //find type
+                for (i = 0; i < type_array.length; i++) {
+                    if (type_find == type_array[i]) {
+                        
+                        if (sub_array[i] != undefined) {
+                            //sort list
+                            var i;
+                            for (j = 0; j < sub_array[i].length; j++) {
+                    
+                                select_sub_list = select_sub_list + "<option>" + sub_array[i][j] + "</option>";
+                            }
+                        }
+                    }
+                }
+                
+                document.getElementById("sub").innerHTML = select_sub_list;
+            }
+            
+            function download_types() {
+                type_dl = "type_array = " + JSON.stringify(type_array) + "; sub_array = " + JSON.stringify(sub_array) + ";"
+            }
+            //note: JSON.stringify strings and fixes [object Object]
         </script>
     </body>
 </html>
