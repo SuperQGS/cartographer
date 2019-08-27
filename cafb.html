@@ -81,7 +81,7 @@
             }
             
             function download_images() {
-                image_dl = "image_array = " + JSON.stringify(image_array) + "; dir_array = " + JSON.stringify(dir_array) + ";"
+                image_dl = "image_array = " + JSON.stringify(image_array) + "; dir_array = " + JSON.stringify(dir_array) + ";" + " load_assets_2();";
                 var file_name = prompt("file name:");
                 download(file_name + "_wad.js",image_dl);
             }
