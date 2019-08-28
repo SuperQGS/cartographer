@@ -67,6 +67,10 @@
             .tile {
                 border: 1px solid black;
             }
+            
+            #selected_image {
+                width: 90%;
+            }
         </style>
     </head>
     <body>
@@ -74,13 +78,16 @@
             <div id="hotbar">
                 <button onclick="save_data()">Save</button>
                 <button onclick="load_data()">Load</button>
-                <button onclick="convert_data()">Convert</button>
-                <button onclick="output()">Game</button>
-                <button onclick="jsfile()">Map</button>
-                <i id = "asset_dir"></i>
+                <!--!!!button onclick="convert_data()">Convert</button>
+                <button onclick="output()">Game</button-->
+                <button onclick="jsfile()">Compile</button>
                 
                 |
                 
+                <button onclick="load_assets()">WAD</button>
+                <button onclick="load_fgd()">FGD</button>
+                
+                |
                 
                 Map Name: <input id="canvas_name">
                 Tile Resolution: <input id="texture_dimensions" size="1">
@@ -91,21 +98,7 @@
                 
             </div>
             <div id="leftbar">
-                Select:<br>
-                Type:
-                <select id="type"></select><button onclick="tile_type()">+</button><br>
-                Image:
-                <select id="image"></select><button onclick="upload_image()">+</button><br>
-                
-                Images:
-                <div id="images"></div>
-                
-                <button onclick="save_assets()">Save Types & Images</button><br>
-                <button onclick="load_assets()">Load Types & Images</button><br>
-                <br>
-                
-                Tools:
-                <select id="tool">
+                Tool:<select id="tool">
                     <option>Place Tile To Grid</option>
                     <option>Fill Area With Tile</option>
                     <option>Place Tile To Pixel</option>
@@ -115,6 +108,10 @@
                     <option>Delete Area</option>
                 </select><br>
                 
+                Image:<select id="image"></select><br>
+                <img src="images/apple.png" id="selected_image"><br>
+                
+                Type:<select id="type"></select><br>
                 
             </div>
             <div id="workspace">
@@ -130,6 +127,8 @@
                 </div>
             </div>
         </div>
+        Library:
+        <div id="library"></div>
         <script>
             //catographer v 1.0
             //engine by SuperQGS @ qgoftware.net
@@ -552,107 +551,7 @@
                 }
                 //existing_tiles();
             }
-            
-            
-            
-            
-            //_____TYPEIMAGE_____
-            //000save assets
-            function save_assets() {
-                var image_html_tags = document.getElementById("images").innerHTML;
-                var fixquotes = '\\"'
-                image_html_tags = image_html_tags.split(',').join(fixquotes);
-                
-                var temp_type_array = "['" + type_array.join("','") + "']";
-                var temp_image_array = "['" + image_array.join("','") + "']";
-                
-                var save = "type_array = " + temp_type_array + ";" +
-                        "document.getElementById(\"images\").innerHTML = " + "\'" + image_html_tags + "\';" +
-                        "image_array = " + temp_image_array + ";";
-                
-                var title = prompt("Assets Save File Title:");
-                
-                download(title + ".js",save);
-            }
-            
-            //000load assets
-            var script;
-            var assets;
-            var assets_directory = null;
-            function load_assets(directory) {
-                if (directory == "" || directory == null) {
-                    var temp_dir = prompt("Assets Save File Directory:");
-                    load_assets(temp_dir);
-                } else {
-                    
-                    
-                    //load js file yes!
-                    script = document.createElement("script");
-                    script.src = directory;
-                    //alert(script);
-                    document.body.appendChild(script);
-                    
-                    assets_directory = directory;
-                    
-                }
-                //create list of images
-                var i;
-                var select_tile_list = "";
-                for (i = 0; i < image_array.length; i++) {
-                    
-                    select_tile_list = select_tile_list + "<option>" + image_array[i] + "</option>";
-                }
-                document.getElementById("image").innerHTML = select_tile_list;
-                //image_div = image_div + "<img src=" + image_dir +  " id=" + image_id + ">"
-                //document.getElementById("images").innerHTML = image_div;
-                
-                
-                ///!!!
-                //probably should rework the image tags so it saves each one as an array
-                //subtracting images and types would also be useful
-                //fix image bug vinny mention. arrays would probably fix with a new system
-            }
-            
-            //000upload image
-            var image_array = [];
-            var image_div = "";
-            function upload_image() {
-                //get type name
-                var image_id = prompt("name:");
-                var image_dir = prompt("directory:");
-                //add image to array
-                image_array[image_array.length] = image_id;
-                //create list of images
-                var i;
-                var select_tile_list = "";
-                for (i = 0; i < image_array.length; i++) {
-                    
-                    select_tile_list = select_tile_list + "<option>" + image_array[i] + "</option>";
-                }
-                document.getElementById("image").innerHTML = select_tile_list;
-                image_div = image_div + "<img src=" + image_dir +  " id=" + image_id + ">"
-                document.getElementById("images").innerHTML = image_div;
-            }
-            
-            //000create type
-            var type_array = [];
-            function tile_type() {
-                //get type name
-                var type_name = prompt("type:");
-                //add type to array
-                type_array[type_array.length] = type_name;
-                //create list of types
-                var i;
-                var select_tile_list = "";
-                for (i = 0; i < type_array.length; i++) {
-                    
-                    select_tile_list = select_tile_list + "<option>" + type_array[i] + "</option>";
-                }
-                document.getElementById("type").innerHTML = select_tile_list;
-                
-            }
-            
-            
+
             
             
             //_____OPTIONS_____
@@ -672,9 +571,6 @@
             //000textbox and button values
             window.setInterval(function(){ textboxes(); }, 0);
             function textboxes() {
-                
-                //image box variable
-                image_div = document.getElementById("images").innerHTML
                 
                 //apply game canvas variables
                 canvas_name = document.getElementById("canvas_name").value;
@@ -722,7 +618,77 @@
                 }
             }
             
+            //000load wad
+            var image_array;
+            function load_assets(directory) {
+                if (directory == "" || directory == null) {
+                    var temp_dir = prompt("Wad File Directory:");
+                    load_assets(temp_dir);
+                } else {
+                    
+                    
+                    //load js file yes!
+                    script = document.createElement("script");
+                    script.src = directory;
+                    //alert(script);
+                    document.body.appendChild(script);
+                    
+                    assets_directory = directory;
+                    
+                }
+            }
             
+            //000load wad 2
+            function load_assets_2() {
+                //create list of images
+                var image_div = "";
+                for (i = 0; i < image_array.length; i++) {
+                    image_div = image_div + "<img src=" + dir_array[i] +  " id=" + image_array[i] + ">"
+                
+                }
+                document.getElementById("library").innerHTML = image_div;
+                
+                //create list of images
+                var i;
+                var select_tile_list = "";
+                for (i = 0; i < image_array.length; i++) {
+                    
+                    select_tile_list = select_tile_list + "<option>" + image_array[i] + "</option>";
+                }
+                document.getElementById("image").innerHTML = select_tile_list;
+            }
+            
+            //000load fgd
+            var type_array;
+            function load_fgd(directory) {
+                if (directory == "" || directory == null) {
+                    var temp_dir = prompt("Fgd File Directory:");
+                    load_fgd(temp_dir);
+                } else {
+                    
+                    
+                    //load js file yes!
+                    script = document.createElement("script");
+                    script.src = directory;
+                    //alert(script);
+                    document.body.appendChild(script);
+                    
+                    type_array = directory;
+                    
+                }
+            }
+            
+            //000load fgd 2
+            function load_fgd_2() {
+                //create list of images
+                var i;
+                var select_tile_list = "";
+                for (i = 0; i < type_array.length; i++) {
+                    
+                    select_tile_list = select_tile_list + "<option>" + type_array[i] + "</option>";
+                }
+                document.getElementById("type").innerHTML = select_tile_list;
+            }
             
             
             //_____FILES_____
@@ -744,14 +710,12 @@
                     load_data(temp_dir);
                     
                 } else {
-                    document.getElementById("asset_dir").innerHTML = "file: " + directory;
                     
                     //load js file yes!
                     script = document.createElement("script");
                     script.src = directory;
                     //alert(script);
                     document.body.appendChild(script);
-                    document.getElementById("asset_dir").innerHTML = "file: " + directory;
                     
                 }
             }
@@ -877,15 +841,12 @@
                 //delete
                 //place tile
                 //place @ pixel
-                //get coords
+                //get coordst
                 //get pixel coords
                 //fill
                 //deletefill
             //typeimage
-                //save assets
-                //load assets
-                //upload image
-                //create type
+                //idk yet
             //options
                 //canvas variables
                 //workspace variables
@@ -893,6 +854,10 @@
                 //toggle grid
                 //toggle gamebox
                 //toggle wh scale
+                //load wad
+                //load wad 2
+                //load fgd
+                //load fgd 2
             //files
                 //save
                 //load
@@ -906,21 +871,21 @@
                 //download
             
             //TODO:
+            //load new tile subtypes
+            //layer names
             //when load, figure out layer list
             //Select Tile
             //Select multiple tiles
             //move selected tile(s)
             //edit selected tile(s) type, image
             //copy/paste selected tile(s)
-            //make game engine todo
-            //custom values edit:???????
+            //rework game engine
             //fix delete and deletearea
             //replace while loops with for loops
-            //layer name
             //documentation/code explaination
             
             //devtemp
-            load_assets("labyrinth_assets.js");
+            //load_assets("labyrinth_assets.js");
         </script>
         <div id="added_scripts"></div>
     </body>
