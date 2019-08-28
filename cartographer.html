@@ -11,7 +11,7 @@
             }
             
             #leftbar {
-                width: 5%;
+                width: 13%;
                 height: 93vh;
                 float: left;
                 border-top: 1px solid black;
@@ -55,6 +55,13 @@
             #exist {
                 overflow: auto;
                 height: 100%
+            }
+            
+            #library {
+                overflow: auto;
+                width: 97%;
+                height: 20vh;
+                border: 1px solid black;
             }
             
             #images {
@@ -109,9 +116,13 @@
                 </select><br>
                 
                 Image:<select id="image"></select><br>
-                <img src="images/apple.png" id="selected_image"><br>
+                Library:
+                <div id="library"></div>
                 
-                Type:<select id="type"></select><br>
+                Type:<select id="type" onclick="subtype_board()"></select><br>
+                
+                <table id="subtypeboard">
+                </table>
                 
             </div>
             <div id="workspace">
@@ -127,8 +138,7 @@
                 </div>
             </div>
         </div>
-        Library:
-        <div id="library"></div>
+        
         <script>
             //catographer v 1.0
             //engine by SuperQGS @ qgoftware.net
@@ -643,7 +653,7 @@
                 //create list of images
                 var image_div = "";
                 for (i = 0; i < image_array.length; i++) {
-                    image_div = image_div + "<img src=" + dir_array[i] +  " id=" + image_array[i] + ">"
+                    image_div = image_div + image_array[i] + "<img src=" + dir_array[i] +  " id=" + image_array[i] + ">| "
                 
                 }
                 document.getElementById("library").innerHTML = image_div;
@@ -659,7 +669,10 @@
             }
             
             //000load fgd
+            var sub_array;
             var type_array;
+            
+            
             function load_fgd(directory) {
                 if (directory == "" || directory == null) {
                     var temp_dir = prompt("Fgd File Directory:");
@@ -673,7 +686,6 @@
                     //alert(script);
                     document.body.appendChild(script);
                     
-                    type_array = directory;
                     
                 }
             }
@@ -688,6 +700,33 @@
                     select_tile_list = select_tile_list + "<option>" + type_array[i] + "</option>";
                 }
                 document.getElementById("type").innerHTML = select_tile_list;
+                
+                subtype_board();
+            }
+            
+            //!!! create subtype board
+            function subtype_board() {
+                var select_sub_list = "<tr><th>Subtypes</th></tr>";
+                var type_find = document.getElementById("type").value;
+                //find type
+                for (i = 0; i < type_array.length; i++) {
+                    if (type_find == type_array[i]) {
+                        
+                        if (sub_array[i] != undefined) {
+                            //sort list
+                            var i;
+                            for (j = 0; j < sub_array[i].length; j++) {
+                    
+                                select_sub_list = select_sub_list + "<tr><td>" + sub_array[i][j] + ":</td><td><input id=\'" + sub_array[i][j] + "_att\'></td></tr>";
+                                
+                    
+
+                            }
+                        }
+                    }
+                }
+                
+                document.getElementById("subtypeboard").innerHTML = select_sub_list;
             }
             
             
@@ -871,18 +910,23 @@
                 //download
             
             //TODO:
-            //load new tile subtypes
-            //layer names
-            //when load, figure out layer list
+            //place attributes
             //Select Tile
             //Select multiple tiles
             //move selected tile(s)
             //edit selected tile(s) type, image
             //copy/paste selected tile(s)
+            
+            //adjust any save or load things (we changed to wad and fgd)
+            //cafb todo
+            
+            //layer names
+            //when load, figure out layer list
             //rework game engine
             //fix delete and deletearea
             //replace while loops with for loops
-            //documentation/code explaination
+            //documentation
+            //commend the code better and clean up inside the sections //do stuff like this too
             
             //devtemp
             //load_assets("labyrinth_assets.js");
