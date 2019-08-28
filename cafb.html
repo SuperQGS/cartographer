@@ -183,7 +183,7 @@
             }
             
             function download_types() {
-                type_dl = "type_array = " + JSON.stringify(type_array) + "; sub_array = " + JSON.stringify(sub_array) + ";" + " load_assets_2();";
+                type_dl = "type_array = " + JSON.stringify(type_array) + "; sub_array = " + JSON.stringify(sub_array) + ";" + " load_fgd_2();";
                 var file_name = prompt("file name:");
                 download(file_name + "_fgd.js",type_dl);
             }
