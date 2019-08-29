@@ -573,7 +573,7 @@
             var grid_width;
             
             //000workspace variables
-            var grid = false;
+            var grid = true;
             var gamebox = false;
             var wvh_scale = "h";
             var scale = 1;
@@ -705,12 +705,15 @@
             }
             
             //!!! create subtype board
+            var selected_type_subs;
             function subtype_board() {
                 var select_sub_list = "<tr><th>Subtypes</th></tr>";
                 var type_find = document.getElementById("type").value;
                 //find type
                 for (i = 0; i < type_array.length; i++) {
                     if (type_find == type_array[i]) {
+                        
+                        selected_type_subs = i;
                         
                         if (sub_array[i] != undefined) {
                             //sort list
@@ -910,6 +913,7 @@
                 //download
             
             //TODO:
+            //var system for selected image, selected type, and pickable subtypes
             //place attributes
             //Select Tile
             //Select multiple tiles
@@ -917,7 +921,7 @@
             //edit selected tile(s) type, image
             //copy/paste selected tile(s)
             
-            //adjust any save or load things (we changed to wad and fgd)
+            //adjust any save or load things (we changed to wad and fgd), also make sure attributes save
             //cafb todo
             
             //layer names
@@ -929,7 +933,8 @@
             //commend the code better and clean up inside the sections //do stuff like this too
             
             //devtemp
-            //load_assets("labyrinth_assets.js");
+            load_assets("www_wad.js");
+            load_fgd("sub_fgd.js");
         </script>
         <div id="added_scripts"></div>
     </body>
