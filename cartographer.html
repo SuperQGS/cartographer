@@ -389,7 +389,10 @@
                 if (place_specific_type == "No Tile Selected" || place_specific_type == "") {
                     alert("No Tile Selected");
                 } else {
-                    tiles[selected_layer][tiles[selected_layer].length] = {x:click_x, y:click_y, type:place_specific_type, image:place_specific_image, image_string:place_specific_image_string};
+                    
+                    var attributes = get_attributes();
+                    
+                    tiles[selected_layer][tiles[selected_layer].length] = {x:click_x, y:click_y, type:place_specific_type, image:place_specific_image, image_string:place_specific_image_string, attributes:attributes};
                     //existing_tiles();
                 }
             }
@@ -732,6 +735,40 @@
                 document.getElementById("subtypeboard").innerHTML = select_sub_list;
             }
             
+            //!!! get attributes
+            function get_attributes() {
+                
+                var att = {};
+                var att_string = "";
+                var sub;
+                var att;
+                
+                var type_find = document.getElementById("type").value;
+                //find type
+                for (i = 0; i < type_array.length; i++) {
+                    if (type_find == type_array[i]) {
+                        
+                        selected_type_subs = i;
+                        
+                        if (sub_array[i] != undefined) {
+                            //sort list
+                            var i;
+                            for (j = 0; j < sub_array[i].length; j++) {
+                                
+                                
+                                sub = document.getElementById(sub_array[i][j] + "_att").value;
+                                att = sub_array[i][j]
+                                
+                                att_string = sub + ":" + "'" + att + "',";
+
+                            }
+                        }
+                    }
+                }
+                
+                att = {att_string}
+                return att;
+            }
             
             //_____FILES_____
             
@@ -913,21 +950,21 @@
                 //download
             
             //TODO:
-            //var system for selected image, selected type, and pickable subtypes
             //place attributes
             //Select Tile
             //Select multiple tiles
             //move selected tile(s)
-            //edit selected tile(s) type, image
+            //edit selected tile(s) type, image, attributes
             //copy/paste selected tile(s)
             
-            //adjust any save or load things (we changed to wad and fgd), also make sure attributes save
+            //attributes save
             //cafb todo
             
             //layer names
             //when load, figure out layer list
             //rework game engine
             //fix delete and deletearea
+            //no way to delete off center tile
             //replace while loops with for loops
             //documentation
             //commend the code better and clean up inside the sections //do stuff like this too
