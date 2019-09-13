@@ -80,6 +80,10 @@
             #selected_image {
                 width: 90%;
             }
+            
+            .library_imgs {
+                float: left;
+            }
         </style>
     </head>
     <body>
@@ -732,7 +736,7 @@
                 //create list of images
                 var image_div = "";
                 for (i = 0; i < image_array.length; i++) {
-                    image_div = image_div + image_array[i] + "<img src=" + dir_array[i] +  " id=" + image_array[i] + ">| "
+                    image_div = image_div + "<div class=library_imgs onclick=set_image(\'" + image_array[i] + "\')>" + image_array[i] + "<img src=" + dir_array[i] +  " id=" + image_array[i] + ">| </div>"
                 
                 }
                 document.getElementById("library").innerHTML = image_div;
@@ -745,6 +749,11 @@
                     select_tile_list = select_tile_list + "<option>" + image_array[i] + "</option>";
                 }
                 document.getElementById("image").innerHTML = select_tile_list;
+            }
+            
+            //!!!
+            function set_image(name) {
+                document.getElementById("image").value = name;
             }
             
             //000load fgd
@@ -1032,6 +1041,7 @@
             //move selected tiles
             //edit selected tile*(s) type, image, attributes
             //copy/paste selected tile*(s)
+            //fill deletes select
             
             //***attributes save
             //cafb todo
@@ -1066,9 +1076,10 @@
             //schematics
             //delete from top
             
+            
             //devtemp
-            load_assets("devtex_wad.js");
-            load_fgd("test_fgd.js");
+            //load_assets("devtex_wad.js");
+            //load_fgd("test_fgd.js");
         </script>
         <div id="added_scripts"></div>
     </body>
