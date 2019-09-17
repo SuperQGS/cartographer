@@ -118,6 +118,7 @@
                     <option>Place Tile To Grid</option>
                     <option>Fill Area With Tile</option>
                     <option>Select</option>
+                    <option>Select Group</option>
                     <option>Place Tile To Pixel</option>
                     <option>Get Grid Coordinates</option>
                     <option>Get Pixel Coordinates</option>
@@ -339,6 +340,9 @@
                 }
                 if (tool == "Select") {
                     select(canvas, evt);
+                }
+                if (tool == "Select Group") {
+                    add_to_group(canvas, evt);
                 }
                 if (tool == "Place Tile To Pixel") {
                     place_specific_coords();
@@ -619,6 +623,7 @@
                     
                                     select_sub_list = select_sub_list + "<tr><td>" + sub_array[i][j] + ": " + eval("selected_tile.attributes." + sub_array[i][j]) + "<br>";
                                 
+                                    
                     
 
                                 }
@@ -629,6 +634,19 @@
                     document.getElementById("select_subs").innerHTML = select_sub_list;
                 }
             }
+            
+            //!!! select group
+            var group = []
+            function add_to_group(canvas, evt) {
+                var rect = canvas.getBoundingClientRect();
+                var click_x = ((Math.floor(((evt.clientX - rect.left) / scale) / texture_dimensions) * texture_dimensions) - exgrid_width/2);
+                var click_y = ((Math.floor(((evt.clientY - rect.top) / scale) / texture_dimensions) * texture_dimensions) - exgrid_height/2);
+                
+                var tile = get_tile_grid_num(click_x, click_y);
+                group[group.length] = tiles[selected_layer][tile]
+            }
+            
+            
             function move(movedir) {
                 if (movedir == "w") {
                     selected_tile.x = selected_tile.x - parseInt(texture_dimensions);
@@ -1041,9 +1059,9 @@
             //move selected tiles
             //edit selected tile*(s) type, image, attributes
             //copy/paste selected tile*(s)
-            //fill deletes select
+            //fix fill tool and delete tool bugs select tool, could fix with universal "tool tags" variable
             
-            //***attributes save
+            //***attributes save method: JSON.stringify everything! saves work great!
             //cafb todo
             
             //layer names
@@ -1052,15 +1070,13 @@
             //fix deletearea
             //no way to delete off center tile
             //attribute value let be numerical
-            //fill attributes
-            //place specific attributes
+            //fill select
             
             //replace while loops with for loops
             //documentation
             //commend the code better and clean up inside the sections //do stuff like this too
             
             //QOL
-            //click on image to select
             //Hotkeys
             //undo redo etc
             //dark mode
@@ -1073,13 +1089,17 @@
             //show all layers
             //negative layers
             //move layers
-            //schematics
+            //save as schematic, to vmf
             //delete from top
+            //get rid of eval?
+            //some kind of security check
+            //save and load firefox (txt instead of js? to js? both?)
             
+            //heavy testing
             
             //devtemp
-            //load_assets("devtex_wad.js");
-            //load_fgd("test_fgd.js");
+            load_assets("devtex_wad.js");
+            load_fgd("test_fgd.js");
         </script>
         <div id="added_scripts"></div>
     </body>
