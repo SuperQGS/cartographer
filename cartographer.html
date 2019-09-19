@@ -140,6 +140,8 @@
                 <div id="selected_tile_div">
                     <strong>No Tile Selected</strong><br>
                 </div>
+                <hr>
+                
                 
             </div>
             <div id="workspace">
@@ -150,7 +152,11 @@
                     
                     Tiles:
                     <div class="tile">Tile Name Image Coordinates Delete</div>
+                    <div id="selected_group_div">
+                        <strong>No Group Selected</strong><br>
+                    </div>
                 </div>
+                
             </div>
         </div>
         
@@ -643,7 +649,30 @@
                 var click_y = ((Math.floor(((evt.clientY - rect.top) / scale) / texture_dimensions) * texture_dimensions) - exgrid_height/2);
                 
                 var tile = get_tile_grid_num(click_x, click_y);
-                group[group.length] = tiles[selected_layer][tile]
+                
+                if (tiles[selected_layer][tile] != undefined) {
+                    group[group.length] = tiles[selected_layer][tile]
+                    group[group.length - 1].layer = selected_layer;
+                    group[group.length - 1].tile = tile;
+                }
+                
+                
+                    
+                    
+                    
+                var grouplist = "";
+                for (i = 0; i < group.length; i++) {
+                    grouplist = grouplist + "tiles[" + group[i].layer + "][" + group[i].tile + "]<br>"
+                }
+                
+                
+                var select_string = "<strong>Selected Group:</strong><br>" +
+                    grouplist +
+                    "<button onclick=move('aw')>\<</button><button onclick=move('ae')>\></button><button onclick=move('as')>v</button><button onclick=move('an')>^</button><br>" +
+                    "<button>edit</button><button>delete</button><button>copy</button><button onclick='alert(JSON.stringify(group))'>data</button><button onclick='group=[]'>deselect</button>";
+                
+                
+                    document.getElementById("selected_group_div").innerHTML = select_string;
             }
             
             
@@ -659,6 +688,28 @@
                 }
                 if (movedir == "s") {
                     selected_tile.y = selected_tile.y + parseInt(texture_dimensions);
+                }
+                
+                
+                if (movedir == "aw") {
+                    for (i = 0; i < group.length; i++) {
+                        group[i].x = group[i].x - parseInt(texture_dimensions);
+                    }
+                }
+                if (movedir == "ae") {
+                    for (i = 0; i < group.length; i++) {
+                        group[i].x = group[i].x + parseInt(texture_dimensions);
+                    }
+                }
+                if (movedir == "an") {
+                    for (i = 0; i < group.length; i++) {
+                        group[i].y = group[i].y - parseInt(texture_dimensions);
+                    }
+                }
+                if (movedir == "as") {
+                    for (i = 0; i < group.length; i++) {
+                        group[i].y = group[i].y + parseInt(texture_dimensions);
+                    }
                 }
             }
             
@@ -1055,26 +1106,31 @@
             
             //TODO:
             
-            //Select multiple NOT AREA
-            //move selected tiles
+            //CRUCIAL FEATURES
+            //***attributes save method: JSON.stringify everything! saves work great!
+            //***rework game engine
+            
+            //FEATURES
             //edit selected tile*(s) type, image, attributes
             //copy/paste selected tile*(s)
-            //fix fill tool and delete tool bugs select tool, could fix with universal "tool tags" variable
-            
-            //***attributes save method: JSON.stringify everything! saves work great!
             //cafb todo
-            
             //layer names
-            //when load, figure out layer list
-            //***rework game engine
-            //fix deletearea
-            //no way to delete off center tile
+            //when load, figure out layer list //names list?
             //attribute value let be numerical
             //fill select
             
+            //BUGS
+            //fix fill tool and delete tool bugs select tool, could fix with universal "tool tags" variable
+            //fix deletearea
+            //no way to delete off center tile
+            //fix selecting twice bug //future: for group select?
+            
+            //CLEAN CODE
             //replace while loops with for loops
             //documentation
             //commend the code better and clean up inside the sections //do stuff like this too
+            //get rid of eval?
+            //some kind of security check
             
             //QOL
             //Hotkeys
@@ -1091,10 +1147,10 @@
             //move layers
             //save as schematic, to vmf
             //delete from top
-            //get rid of eval?
-            //some kind of security check
             //save and load firefox (txt instead of js? to js? both?)
+            //config
             
+            //TESTING
             //heavy testing
             
             //devtemp
