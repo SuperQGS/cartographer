@@ -655,26 +655,34 @@
                     group[group.length - 1].layer = selected_layer;
                     group[group.length - 1].tile = tile;
                 }
-                
-                
-                    
-                    
-                    
+
                 var grouplist = "";
                 for (i = 0; i < group.length; i++) {
-                    grouplist = grouplist + "tiles[" + group[i].layer + "][" + group[i].tile + "]<br>"
+                    grouplist = grouplist + "tiles[" + group[i].layer + "][" + group[i].tile + "] - " + group[i].type + "," + group[i].image_string + "," + group[i].x + "," + group[i].y + "<br>"
                 }
                 
                 
                 var select_string = "<strong>Selected Group:</strong><br>" +
                     grouplist +
                     "<button onclick=move('aw')>\<</button><button onclick=move('ae')>\></button><button onclick=move('as')>v</button><button onclick=move('an')>^</button><br>" +
-                    "<button>edit</button><button>delete</button><button>copy</button><button onclick='alert(JSON.stringify(group))'>data</button><button onclick='group=[]'>deselect</button>";
+                    "<button onclick='edit_group()'>edit</button><button>delete</button><button>copy</button><button onclick='alert(JSON.stringify(group))'>data</button><button onclick='group=[]'>deselect</button>";
                 
                 
                     document.getElementById("selected_group_div").innerHTML = select_string;
             }
             
+            //!!!
+            function edit_group() {
+                for (i = 0; i < group.length; i++) {
+                    group[i].type = document.getElementById("type").value;
+                    group[i].image = eval(document.getElementById("image").value);
+                    group[i].image_string = document.getElementById("image").value;
+                    
+                }
+            }
+            //var place_specific_type = document.getElementById("type").value;
+            //var place_specific_image = eval(document.getElementById("image").value);
+            //var place_specific_image_string = document.getElementById("image").value;
             
             function move(movedir) {
                 if (movedir == "w") {
@@ -931,7 +939,7 @@
             function save_data() {
                 get_tiles();
                 
-                var save_file = "function save_func(){ " + "load_assets('" + assets_directory + "'); " + "document.getElementById('canvas_name').value='" + canvas_name + "'; document.getElementById('texture_dimensions').value=" + texture_dimensions + "; " +"tiles=[" + get_tile_list + "]; " + get_vis_list + " } save_func();"
+                var save_file = "function save_func(){ " +"tiles=" + JSON.stringify(tiles); + "; " + get_vis_list + " } save_func();"
                 
                 var file_name = prompt("Save As: (.js)")
                 download(file_name + ".js",save_file);
@@ -1107,7 +1115,7 @@
             //TODO:
             
             //CRUCIAL FEATURES
-            //***attributes save method: JSON.stringify everything! saves work great!
+            //***attributes save method: JSON.stringify everything! saves work great! edit: nope, doesnt get image src
             //***rework game engine
             
             //FEATURES
@@ -1119,11 +1127,14 @@
             //attribute value let be numerical
             //fill select
             
+            //IMPORTANT BUGS
+            //fix fill tool and delete tool, they bug the select tool, could fix with universal "tool tags" variable
+            
             //BUGS
-            //fix fill tool and delete tool bugs select tool, could fix with universal "tool tags" variable
             //fix deletearea
             //no way to delete off center tile
             //fix selecting twice bug //future: for group select?
+            //update select display when things change
             
             //CLEAN CODE
             //replace while loops with for loops
