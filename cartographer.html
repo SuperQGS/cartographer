@@ -937,34 +937,23 @@
             
             //000save
             function save_data() {
+                var save_tiles = JSON.parse(JSON.stringify(tiles))
                 
-                //render tiles
-                var num_of_tiles = tiles.length - 1;
-                
-                var layer;
-                var tile;
-                for (layer = 0; layer < tiles.length; layer++) {
-                    num_of_tiles = tiles[layer].length;
-                    for (tile = 0; tile < num_of_tiles; tile++) {
-                        tiles[layer][tile] = xx;
-                    }
-                        
-                }
-                
-                
-                var save_tiles = tiles;
-                for (i = 0; i < save_tiles.length; i++) {
+                for (t = 0; t < save_tiles.length; t++) {
                     
-                    for (j = 0; i < save_tiles[i].length; j++) {
-                        console.log(i + "," + j);
-                        save_tiles[i][j].image = save_tiles[i][j].image_string;
+                    for (e = 0; e < save_tiles[t].length; e++) {
+                        console.log(t + "," + e);
+                        save_tiles[t][e].image = save_tiles[t][e].image_string;
                     }
                 }
+                
+                console.log(JSON.stringify(tiles));
+                console.log(JSON.stringify(save_tiles));
                 
                 var save_file = "function save_func(){ " + "tiles=" + JSON.stringify(save_tiles); + "; " + get_vis_list + " } save_func();";
                 
                 var file_name = prompt("Save As: (.js)");
-                //download(file_name + ".js",save_file);
+                download(file_name + ".js",save_file);
             }
             
             //000load
