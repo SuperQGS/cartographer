@@ -937,12 +937,34 @@
             
             //000save
             function save_data() {
-                get_tiles();
                 
-                var save_file = "function save_func(){ " +"tiles=" + JSON.stringify(tiles); + "; " + get_vis_list + " } save_func();"
+                //render tiles
+                var num_of_tiles = tiles.length - 1;
                 
-                var file_name = prompt("Save As: (.js)")
-                download(file_name + ".js",save_file);
+                var layer;
+                var tile;
+                for (layer = 0; layer < tiles.length; layer++) {
+                    num_of_tiles = tiles[layer].length;
+                    for (tile = 0; tile < num_of_tiles; tile++) {
+                        tiles[layer][tile] = xx;
+                    }
+                        
+                }
+                
+                
+                var save_tiles = tiles;
+                for (i = 0; i < save_tiles.length; i++) {
+                    
+                    for (j = 0; i < save_tiles[i].length; j++) {
+                        console.log(i + "," + j);
+                        save_tiles[i][j].image = save_tiles[i][j].image_string;
+                    }
+                }
+                
+                var save_file = "function save_func(){ " + "tiles=" + JSON.stringify(save_tiles); + "; " + get_vis_list + " } save_func();";
+                
+                var file_name = prompt("Save As: (.js)");
+                //download(file_name + ".js",save_file);
             }
             
             //000load
@@ -1128,6 +1150,7 @@
             //fill select
             
             //IMPORTANT BUGS
+            //***fix saving and compiling!
             //fix fill tool and delete tool, they bug the select tool, could fix with universal "tool tags" variable
             
             //BUGS
