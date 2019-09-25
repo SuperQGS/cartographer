@@ -937,20 +937,10 @@
             
             //000save
             function save_data() {
-                var save_tiles = JSON.parse(JSON.stringify(tiles))
                 
-                for (t = 0; t < save_tiles.length; t++) {
-                    
-                    for (e = 0; e < save_tiles[t].length; e++) {
-                        console.log(t + "," + e);
-                        save_tiles[t][e].image = save_tiles[t][e].image_string;
-                    }
-                }
+                get_tiles();
                 
-                console.log(JSON.stringify(tiles));
-                console.log(JSON.stringify(save_tiles));
-                
-                var save_file = "function save_func(){ " + "tiles=" + JSON.stringify(save_tiles); + "; " + get_vis_list + " } save_func();";
+                var save_file = "function save_func(){ " + "tiles=[" + get_tile_list + "]; " + get_vis_list + " } save_func();";
                 
                 var file_name = prompt("Save As: (.js)");
                 download(file_name + ".js",save_file);
@@ -1026,8 +1016,9 @@
                         var get_x = tiles[j][i].x;
                         var get_y = tiles[j][i].y;
                         var get_img = tiles[j][i].image_string;
+                        var get_attributes = JSON.stringify(tiles[j][i].attributes);
                         
-                        get_single_list[i] = "{x:" + get_x + ", y:" + get_y + ", type:\'" + get_name + "\', image:" + get_img + ", image_string:\'" + get_img + "\'}";
+                        get_single_list[i] = "{x:" + get_x + ", y:" + get_y + ", type:\'" + get_name + "\', image:" + get_img + ", image_string:\'" + get_img + "\', attributes:\'" + get_attributes + "\'}";
                     }
                     get_tile_list[j] = "[" + get_single_list + "]";
                     
@@ -1126,7 +1117,6 @@
             //TODO:
             
             //CRUCIAL FEATURES
-            //***attributes save method: JSON.stringify everything! saves work great! edit: nope, doesnt get image src
             //***rework game engine
             
             //FEATURES
@@ -1134,7 +1124,7 @@
             //copy/paste selected tile*(s)
             //cafb todo
             //layer names
-            //when load, figure out layer list //names list?
+            //when load, figure out layer list, make sure the array and dropdown work
             //attribute value let be numerical
             //fill select
             
