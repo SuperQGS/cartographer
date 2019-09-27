@@ -65,7 +65,7 @@
             
             //render stuff
             var change_tile;
-            window.setInterval(function(){ render(); }, 0);
+            window.setInterval(function(){ develop2(); }, 0);
             function render() {
                 //render tiles
                 
@@ -81,8 +81,6 @@
                         
                     }
                 }
-                
-                develop2();
             }
             
             //developer function
@@ -103,9 +101,31 @@
                 ctx.drawImage(change_tile.image, change_tile.x + grid_width/2 - camera.x, change_tile.y + grid_height/2 - camera.y);
             }
             
+            
+            var multiplierx = 0.5;
+            var multipliery = 0.5;
             function develop2() {
                 
+                camera.x = camera.x + multiplierx;
+                camera.y = camera.y + multipliery;
                 
+                if (camera.x > 64) {
+                    multiplierx = -1;
+                }
+                
+                if (camera.y > 64) {
+                    multipliery = -0.5;
+                }
+                
+                if (camera.x < -80) {
+                    multiplierx = 1;
+                }
+                
+                if (camera.y < -64) {
+                    multipliery = 0.5;
+                }
+                
+                render();
             }
             
             
@@ -131,9 +151,27 @@
             
             function binds(u,d) {
                 if (u.keyCode == "87") {
-                    console.log("down");
+                    
                 } else if (d.keyCode == "87") {
-                    console.log("up");
+                    camera.y = camera.y + 1
+                }
+                
+                if (u.keyCode == "83") {
+                    
+                } else if (d.keyCode == "83") {
+                    camera.y = camera.y - 1
+                }
+                
+                if (u.keyCode == "68") {
+                    
+                } else if (d.keyCode == "68") {
+                    camera.x = camera.x - 1
+                }
+                
+                if (u.keyCode == "65") {
+                    
+                } else if (d.keyCode == "65") {
+                    camera.x = camera.x + 1
                 }
             }
             
