@@ -37,11 +37,18 @@
         
         
         <script>
-            //PASTE CANVAS VARIABLES UNDER HERE
-            var canvas_name = "game"; var texture_dimensions = 16; var grid_height = 84; var grid_width = 98; var camera = {x:0, y:0};
+            //config
+            var canvas_name = "game";
+            var texture_dimensions = 16;
+            var grid_height = 84;
+            var grid_width =98;
             
-            //PASTE TILES UNDER HERE
+            //camera
+            var camera = {x:0, y:0};
+            
+            //tiles
             var tiles = [[{x:-32, y:-32, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:-16, y:-32, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:0, y:-32, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:16, y:-32, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:16, y:-16, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:0, y:-16, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:-16, y:-16, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:-32, y:-16, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:-32, y:16, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:-16, y:0, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:-16, y:16, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:-32, y:0, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:0, y:0, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:16, y:0, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:16, y:16, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}},{x:0, y:16, type:'test1', image:dev1, image_string:'dev1', attributes:{"deva":"","devb":"","devc":""}}]];
+            tiles[0].vis = true;
             
             //canvas info
             var canvas = document.getElementById(canvas_name);
@@ -65,7 +72,9 @@
             
             //render stuff
             var change_tile;
-            window.setInterval(function(){ develop2(); }, 0);
+            window.setInterval(function(){ cycle(); }, 0);
+            
+            
             function render() {
                 //render tiles
                 
@@ -76,14 +85,14 @@
                         for (tile = 0; tile < tiles[layer].length; tile++) {
                             change_tile = tiles[layer][tile];
                             real_time_tick();
-                            develop();
+                            per_tile();
                         }
                         
                     }
                 }
             }
             
-            //developer function
+            //per tile function
             //NOTE: attributes of each tile are
             //x:
             //y:
@@ -91,7 +100,7 @@
             //image:
             //image_string:
             //attributes.xyz:
-            function develop() {
+            function per_tile() {
                 //your code goes here
                 
                 
@@ -104,7 +113,7 @@
             
             var multiplierx = 0.5;
             var multipliery = 0.5;
-            function develop2() {
+            function cycle() {
                 
                 camera.x = camera.x + multiplierx;
                 camera.y = camera.y + multipliery;
@@ -176,19 +185,12 @@
             }
             
             //notes:
-            //make render inside develop2, rather than other way
-            //load all config stuff from js file. maybe another cafb to make it.
-            //compiling needs vislist
             //implement optomize doc
             //clean code
             
             //built in functions to include:
             //collisions
             //load level
-            
-            //test purposes
-            //tiles
-            //background
             
         </script>
     </body>
