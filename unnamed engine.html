@@ -85,14 +85,14 @@
                         for (tile = 0; tile < tiles[layer].length; tile++) {
                             change_tile = tiles[layer][tile];
                             real_time_tick();
-                            per_tile();
+                            adjust();
                         }
                         
                     }
                 }
             }
             
-            //per tile function
+            //adjust tile function
             //NOTE: attributes of each tile are
             //x:
             //y:
@@ -100,7 +100,7 @@
             //image:
             //image_string:
             //attributes.xyz:
-            function per_tile() {
+            function adjust() {
                 //your code goes here
                 
                 
