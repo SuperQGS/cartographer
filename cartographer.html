@@ -967,7 +967,7 @@
             function jsfile() {
                 get_tiles();
                 
-                download(canvas_name + ".js","/*tiles*/var " + canvas_name + "=" + "[" + get_tile_list + "];/*vislist:*/" + get_vis_list);
+                download(canvas_name + ".js","/*tiles*/var " + canvas_name + "=" + "[" + get_tile_list + "];/*settiles*/tiles=" + canvas_name + ";/*vislist:*/" + get_vis_list);
             }
             
             //000compile

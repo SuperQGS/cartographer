@@ -27,6 +27,10 @@
         <div id="images">
             <!--PASTE IMAGE TAGS UNDER HERE-->
             <img src=devtex/dev1.bmp id=dev1>
+            <img src=devtex/white.bmp id=white>
+            <img src=devtex/blue.bmp id=blue>
+            <img src=devtex/logo.bmp id=logo>
+            <img src=devtex/qgs2.bmp id=qgs2>
         </div>
         
         
@@ -67,14 +71,10 @@
                     start_tick = Date.now();
                 }
                 tick = Date.now() - start_tick;
-                //console.log(tick);
             }
             
             //render stuff
             var change_tile;
-            window.setInterval(function(){ cycle(); }, 0);
-            
-            
             function render() {
                 //render tiles
                 
@@ -84,7 +84,6 @@
                     if (tiles[layer].vis) {
                         for (tile = 0; tile < tiles[layer].length; tile++) {
                             change_tile = tiles[layer][tile];
-                            real_time_tick();
                             adjust();
                         }
                         
@@ -111,47 +110,32 @@
             }
             
             
-            var multiplierx = 0.5;
-            var multipliery = 0.5;
+            var second_multiplier = 0;
+            var second5_multiplier = 0;
+            window.setInterval(function(){ cycle(); }, 0);
             function cycle() {
+                real_time_tick();
                 
-                camera.x = camera.x + multiplierx;
-                camera.y = camera.y + multipliery;
-                
-                if (camera.x > 64) {
-                    multiplierx = -1;
+                var second_tick = tick - second_multiplier;
+                while (second_tick > 1000) {
+                    second_tick = second_tick - 1000
+                    //console.log("second");
+                    second_multiplier = tick;
                 }
                 
-                if (camera.y > 64) {
-                    multipliery = -0.5;
-                }
-                
-                if (camera.x < -80) {
-                    multiplierx = 1;
-                }
-                
-                if (camera.y < -64) {
-                    multipliery = 0.5;
+                var second5_tick = tick - second5_multiplier;
+                while (second5_tick > 5000) {
+                    second5_tick = second5_tick - 5000
+                    //console.log("second5");
+                    second5_multiplier = tick;
                 }
                 
                 render();
             }
             
+            //------------------------------------------------------------------------------------------
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+            //BIND FUNCTION
             window.addEventListener("keydown", downbinds, false);
             window.addEventListener("keyup", upbinds, false);
             
@@ -184,13 +168,21 @@
                 }
             }
             
-            //notes:
-            //implement optomize doc
-            //clean code
+            function collision(tile1, tile2, xdir, ydir) {
+                //to make custom hitboxes, change texture_dimensions to some kind of .width
+                if (tile2.x < tile1.x + texture_dimensions + xdir && tile2.x + texture_dimensions > tile1.x + xdir && tile2.y < tile1.y + texture_dimensions + ydir && tile2.y + texture_dimensions > tile1.y + ydir) {
+                    alert("COLLLLLIDEEEE");
+                }
+            }
             
-            //built in functions to include:
-            //collisions
-            //load level
+            function load_level(lvlstring) {
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                script.src = lvlstring +'.js';
+                script.id = lvlstring;
+                head.appendChild(script);
+                
+            }
             
         </script>
     </body>
